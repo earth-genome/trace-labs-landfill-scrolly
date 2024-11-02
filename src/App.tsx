@@ -9,11 +9,11 @@ import { Scrollama, Step } from "react-scrollama";
 
 // NOTE: Data
 
-import steelplant from "@/data/steel-plant.csv";
+// import steelplant from "@/data/steel-plant.csv";
+import data from "@/data/data.csv";
 import stackedBarChartData from "@/data/stackedBarChart.csv";
 // NOTE: config + static data
-
-
+import { STEP_CONDITIONS, useStepFilteredData } from "@/utility/stepConfig";
 // NOTE: Custom UI components
 
 // NOTE: Reusable UI components
@@ -22,29 +22,25 @@ import { Slider } from "@/components/reusable-ui-components/slider";
 // NOTE: Big Container components
 import DeckglMap from "./components/containers/DeckglMap";
 import { HeatGapHeader } from "./components/containers/Header";
-import StackedBarChart from "./components/custom-chart-components/StackedBarChart";
 
-const X_VARIABLE = "xValue";
-const Y_VARIABLE = "yValue";
+// NOTE: Custom Chart components
+import BarChart from "./components/custom-chart-components/BarChart";
+
+const X_VARIABLE = "emissions_quantity_avoided";
+const Y_VARIABLE = "asset_name";
 const COLOR_VARIABLE = "gap";
 
-const SORT_VARIABLE = "activity";
-const SORTED_DATA = steelplant.sort(
-  (a, b) => b[SORT_VARIABLE] - a[SORT_VARIABLE]
-);
+const SORT_VARIABLE = "emissions_quantity_avoided";
+const SORTED_DATA = data.sort((a, b) => +b[SORT_VARIABLE] - +a[SORT_VARIABLE]);
 
-// Load the d3-time module
-const parseDate = d3.timeParse("%Y-%m-%dT%H:%MZ"); // To parse the full date-time string
-const formatDate = d3.timeFormat("%Y-%m-%d"); // To format the date into "YYYY-MM-DD"
-const dataInAMonth = steelplant.filter((d) => {
-  const formattedDate = formatDate(parseDate(d.start_date)); // Format the date
-
-  // Compare the formatted date with the target date
-  const isEqual = formattedDate === "2024-07-01";
-  return isEqual;
+SORTED_DATA.forEach((d, i) => {
+  d[SORT_VARIABLE] = +d[SORT_VARIABLE];
+  d["lat"] = +d["lat"];
+  d["lon"] = +d["lon"];
+  d["annexOrNot"] = d["annexOrNot"] == "true" ? true : false;
+  d.top100OrNot = i < 100;
 });
-
-const arrayLength = dataInAMonth.length;
+const arrayLength = SORTED_DATA.length;
 
 const allCountries = [
   {
@@ -761,60 +757,29 @@ const allCountries = [
 function App() {
   const { parentRef } = useParentSize();
   const [sliderValue, setSliderValue] = useState([33]);
-  const top_n_plants = useMemo(() => {
-    const topCount = Math.ceil(arrayLength * sliderValue); // Calculate 10% of the array size
 
-    // Sort by value in descending order
-
-    return dataInAMonth.slice(0, topCount);
-  }, [sliderValue]);
-
-  // const selectedCountriesBarChartData = useMemo(() => {
-  //   const selectedBar = top_n_plants.filter((d) =>
-  //     selectedCountries.includes(d.iso3_country)
-  //   );
-
-  //   return selectedBar;
-  // }, [selectedCountries]);
-  // const selectedIndices = useMemo(() => {
-  //   if (selectedCountries && selectedCountries.length > 0) {
-  //     return selectedCountries.map((shortName) =>
-  //       allCountries.findIndex((country) => country.shortName === shortName)
-  //     );
-  //   }
-  //   return d3.range(0, 400);
-  // }, [selectedCountries]);
-  const [currentStepIndex, setCurrentStepIndex] = useState(null);
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
 
   // This callback fires when a Step hits the offset threshold. It receives the
   // data prop of the step, which in this demo stores the index of the step.
   const onStepEnter = ({ data }) => {
     setCurrentStepIndex(data);
   };
+  // <StackedBarChart
+  //                 width={width}
+  //                 height={height}
+  //                 data={stackedBarChartData}
+  //                 X_VARIABLE={"state"}
+  //                 Y_VARIABLE={"population"}
+  //                 GROUP_VARIABLE={"age"}
+  //               />
   return (
     <div className=" relative ">
       <main className="flex flex-col lg:ml-2 ">
         <header className="w-full bg-transparent">
           {/* <HeatGapHeader countrySelector={allCountries} /> */}
         </header>
-        <div className="w-1/2 h-[50vh]">
-              <ParentSize>
-                {({ width, height }) => {
-                  return (
-                     (
-                      <StackedBarChart
-                        width={width}
-                        height={height}
-                        data={stackedBarChartData}
-                        X_VARIABLE={"state"}
-                        Y_VARIABLE={"population"}
-                        GROUP_VARIABLE={"age"}
-                      />
-                    )
-                  );
-                }}
-              </ParentSize>
-            </div>
+
         <div
           className="flex flex-col items-center justify-center"
           style={{ margin: "0vh", border: "2px dashed skyblue" }}
@@ -841,15 +806,16 @@ function App() {
                     {({ width, height }) => {
                       return (
                         <DeckglMap
-                          zoomToWhichState={''}
-                          zoomToWhichCounty={''}
+                          zoomToWhichState={""}
+                          zoomToWhichCounty={""}
                           geographyData={[]}
-                          data={top_n_plants}
+                          data={SORTED_DATA}
                           colorVariable={COLOR_VARIABLE}
                           xVariable={X_VARIABLE}
                           yVariable={Y_VARIABLE}
                           width={width}
                           currentStepIndex={currentStepIndex}
+                          STEP_CONDITIONS={STEP_CONDITIONS}
                         />
                       );
                     }}
@@ -859,20 +825,20 @@ function App() {
             </div>
           </div>
           <Scrollama offset={0.5} onStepEnter={onStepEnter} debug>
-            {[1, 2, 3, 4,5].map((_, stepIndex) => (
+            {[1, 2, 3, 4, 5].map((_, stepIndex) => (
               <Step data={stepIndex} key={stepIndex}>
                 <div
                   style={{
                     marginTop: `${
                       stepIndex == 0 ? "30vh" : 50 * stepIndex + "vh"
                     }`,
-                    marginBottom: stepIndex == 4 ? "50vh" : 0
+                    marginBottom: stepIndex == 4 ? "50vh" : 0,
                   }}
                   id="g-header-container"
                 >
                   <header id="interactive-header">
                     <h1 id="interactive-heading" data-testid="headline">
-                    Lorem ipsum dolor sit amet,
+                      Lorem ipsum dolor sit amet,
                     </h1>
 
                     <p id="interactive-leadin" data-testid="interactive-leadin">
@@ -883,12 +849,45 @@ function App() {
                       Nam ipsum urna, fringilla sit amet diam eget, faucibus
                       eleifend leo. 
                     </p>
+                    <div
+                      className="size-[500px]"
+                    
+                    >
+                      <ParentSize>
+                        {({ width, height }) => {
+                          return (
+                            <BarChart
+                              width={width}
+                              height={height}
+                              data={SORTED_DATA}
+                              stepIndex={currentStepIndex}
+                              xVariable={X_VARIABLE}
+                              yVariable={Y_VARIABLE}
+                            />
+                          );
+                        }}
+                      </ParentSize>
+                    </div>
                   </header>
                 </div>
               </Step>
             ))}
           </Scrollama>
         </div>
+
+        <footer id="interactive-header">
+          <h1 id="interactive-heading" data-testid="headline">
+            Lorem ipsum dolor sit amet,
+          </h1>
+
+          <p id="interactive-leadin" data-testid="interactive-leadin">
+            What is this tool...Lorem ipsum dolor sit amet, consectetur
+            adipiscing elit. Vestibulum fermentum, nibh et posuere posuere, nisi
+            velit accumsan libero, vitae luctus justo mi a est. Morbi sel, vitae
+            pharetra ante euismod ac. Nam ipsum urna, fringilla sit amet diam
+            eget, faucibus eleifend leo. 
+          </p>
+        </footer>
       </main>
     </div>
   );

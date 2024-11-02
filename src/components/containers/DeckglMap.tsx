@@ -1,29 +1,21 @@
-import { useEffect, useState, useMemo, useCallback } from "react";
+// @ts-nocheck
+import { useEffect, useState, useMemo, useCallback, memo } from "react";
 import * as d3 from "d3";
-
+import { Map } from "react-map-gl/maplibre";
 import DeckGL from "@deck.gl/react";
 import {
   FlyToInterpolator,
   LightingEffect,
   AmbientLight,
   _SunLight as SunLight,
+  PickingInfo,
 } from "@deck.gl/core";
 import { GeoJsonLayer, ScatterplotLayer } from "@deck.gl/layers";
 
 import Tooltip from "@/components/reusable-ui-components/tooltip";
 import worldGEOJSON from "@/data/world.json";
 
-// console.log(
-//   "data",
-//   worldGEOJSON.features
-//     .map((d) => {
-//       return {
-//         longName: d.properties.name_long,
-//         shortName: d.properties.adm0_a3,
-//       };
-//     })
-//     .sort((a, b) => a.longName.localeCompare(b.longName))
-// );
+
 const LIGHT_GRAY = [234, 234, 234, 255];
 const BLACK = [0, 0, 0, 255];
 type DataType = {
@@ -37,7 +29,7 @@ function easeOutExpo(x: number): number {
 const twoSigFigFormatter = d3.format(".2r");
 const elevationScale = d3.scaleLinear().domain([-1, 1]).range([0, 2000]);
 
-const DeckglMap = ({
+const DeckglMap = memo(({
   zoomToWhichState,
   zoomToWhichCounty,
   geographyData,
@@ -47,7 +39,8 @@ const DeckglMap = ({
   yVariable,
   width,
   height,
-  currentStepIndex,
+  currentStepIndex = 0,
+  STEP_CONDITIONS,
 }: {
   zoomToWhichState: Record<string, any>; // Adjust type as necessary
   zoomToWhichCounty: Record<string, any>; // Adjust type as necessary
@@ -59,23 +52,34 @@ const DeckglMap = ({
   width: number;
   height: number;
   currentStepIndex: number;
-}) => {
+  STEP_CONDITIONS: Record<number, (d: any) => boolean>;
+  }) => {
   const [viewState, setViewState] = useState({
     longitude: 0,
     latitude: 0,
-    zoom: 1,
+    zoom: 1.8,
     pitch: 0,
     bearing: 0,
   });
 
-  const getScatterplotConfig = useCallback((stepIndex: number) => {
+  const COLORS = {
+    RED: [255, 0, 0],
+    LIGHT_GRAY: [211, 211, 211],
+    BLACK: [234, 234, 234],
+    BROWN: [165, 42, 42],
+  } as const;
+
+  const getScatterplotConfig = useCallback((stepIndex, d) => {
+    const condition = STEP_CONDITIONS[stepIndex];
+    const isHighlighted = condition?.(d) ?? false;
+  
     return {
-      radius: stepIndex === 2 ? 200000 : 100000,
-      // Use the predefined color arrays
-      fillColor: stepIndex === 3 ? BLACK : LIGHT_GRAY,
-      lineWidth: stepIndex === 1 ? 30000 : 1,
+      radius: isHighlighted ? 10 : 1,
+      fillColor: isHighlighted ? COLORS.BLACK : COLORS.LIGHT_GRAY,
+      lineWidth: isHighlighted ? 1 : 0
     };
   }, []);
+
   const [hoverInfo, setHoverInfo] = useState<PickingInfo<DataType>>({});
 
   const layers = useMemo(
@@ -90,12 +94,7 @@ const DeckglMap = ({
           autoHighlight: false,
           stroked: true,
           getLineColor: [0, 0, 0, 255],
-          // extruded: true,
-          // getElevation: (f) => {
-          //   // console.log(elevationScale(f.properties[colorVariable]));
-          //   return elevationScale(f.properties[colorVariable]);
-          // },
-          // elevationScale: 100,
+
           getLineWidth: 1,
           lineWidthUnits: "pixels",
           lineWidthScale: 1,
@@ -106,17 +105,19 @@ const DeckglMap = ({
           id: "steel-plant-dots",
           data: data,
           stroked: true,
-          getPosition: (d) => [+d.longitude, +d.latitude],
-          getRadius: getScatterplotConfig(currentStepIndex).radius,
-          // Use updateTriggers to force updates
-          updateTriggers: {
-            getFillColor: currentStepIndex,
-            getLineWidth: currentStepIndex,
-            getRadius: currentStepIndex,
-          },
-          getFillColor: getScatterplotConfig(currentStepIndex).fillColor,
+          getPosition: (d) => [+d.lon, +d.lat],
+          radiusUnits: "pixels",
+          radiusMinPixels: 0.2,
+          radiusMaxPixels: 200,
+          getRadius: (d) => getScatterplotConfig(currentStepIndex, d).radius,
+          getFillColor: (d) =>
+            getScatterplotConfig(currentStepIndex, d).fillColor,
+          lineWidthUnits: "pixels",
+          lineWidthScale: 1,
+          lineWidthMinPixels: 0,
+          lineWidthMaxPixels: 100,
           getLineColor: [0, 0, 0],
-          getLineWidth: getScatterplotConfig(currentStepIndex).lineWidth,
+          getLineWidth: (d) => getScatterplotConfig(currentStepIndex, d).lineWidth,
           transitions: {
             getRadius: {
               duration: 1000,
@@ -125,12 +126,16 @@ const DeckglMap = ({
             getFillColor: {
               duration: 1000,
               easing: d3.easeCubicInOut,
-              enter: (value) => value, // Add enter transition
             },
             getLineWidth: {
               duration: 1000,
               easing: d3.easeCubicInOut,
             },
+          },
+          updateTriggers: {
+            getRadius: [currentStepIndex], // Tell deck.gl to re-evaluate when currentStepIndex changes
+            getFillColor: [currentStepIndex],
+            getLineWidth: [currentStepIndex],
           },
           pickable: false,
         }),
@@ -178,9 +183,14 @@ const DeckglMap = ({
           minZoom: 0.000001,
           maxZoom: 10,
         }}
-        layers={[...layers, hoverLayer].filter(Boolean)}
+        layers={[...layers].filter(Boolean)}
         onHover={(info) => setHoverInfo(info.object ? info : null)}
       >
+         <Map
+          className="absolute top-0 left-0 w-full h-full"
+          reuseMaps
+          mapStyle={"https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"}
+        />
         {/* {hoverInfo && hoverInfo.object && (
           <Tooltip
             left={hoverInfo.x + 10}
@@ -198,6 +208,6 @@ const DeckglMap = ({
       </DeckGL>
     </map>
   );
-};
+});
 
 export default DeckglMap;
