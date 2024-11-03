@@ -797,7 +797,7 @@ function App() {
                 onValueChange={(value) => setSliderValue(value)}
               />
               {/*  aspect-[4/3] md:aspect-[16/9]  */}
-              <div className=" w-full h-full flex flex-col md:flex-row mx-10">
+              <div className=" w-full h-full flex flex-col md:flex-row">
                 <figure
                   ref={parentRef}
                   className="flex-grow max-md:h-[205px] relative z-10  lg:order-last"
