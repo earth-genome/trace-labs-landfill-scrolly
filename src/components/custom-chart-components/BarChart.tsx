@@ -45,46 +45,73 @@ const BarChart = ({
   );
   useEffect(() => {
     if (filteredData.length > 100 || !svgRef.current) return;
-
+  
     const svg = d3.select(svgRef.current);
-    svg.selectAll("*").remove(); // Clear existing content
-
-    // Create scales
-
-    console.log(filteredData);
-    // // Create and animate bars
-    const bars = svg
-      .append("g")
-      .attr("transform", `translate(${marginLeft},${marginTop})`)
-      .selectAll("rect")
-      .data(filteredData)
-      .enter()
+  
+    // Create container if it doesn't exist
+    const chartGroup = svg
+      .selectAll('.chart-group')
+      .data([null])
+      .join('g')
+      .attr('class', 'chart-group')
+      .attr("transform", `translate(${marginLeft},${marginTop})`);
+  
+    // Update scales are now in useMemo, so no need to update domains here
+  
+    // Data join with proper key function
+    const bars = chartGroup
+      .selectAll(".bar")
+      .data(filteredData, d => d.asset_id);
+  
+    // Remove exiting bars with transition
+    bars.exit()
+      .transition()
+      .duration(1000)
+      .attr("width", 0)
+      .remove();
+  
+    // Update existing bars
+    bars.transition()
+      .duration(1000)
+      .attr("y", d => y(d[yVariable]) ?? 0)
+      .attr("x", 0)
+      .attr("width", d => x(d[xVariable]) ?? 0)
+      .attr("height", y.bandwidth());
+  
+    // Add new bars
+    bars.enter()
       .append("rect")
-      .attr("y", (d) => y(d[yVariable]) ?? 0)
+      .attr("class", "bar")
+      .attr("y", d => y(d[yVariable]) ?? 0)
       .attr("x", 0)
       .attr("height", y.bandwidth())
-      .attr("width", (d) => x(d[xVariable]) ?? 0)
+      .attr("width", 0)
       .attr("fill", "lightgray")
-      .attr("stroke", "black");
-
-    // bars
-    //   .transition()
-    //   .duration(1000)
-    //   .attr("y", (d) => y(d[yVariable]))
-    //   .attr("height", (d) => innerHeight - y(d[yVariable]));
-
-    // Add axes
-    svg
-      .append("g")
-      .attr("transform", `translate(${marginLeft},${height - marginBottom})`)
-      .call(d3.axisBottom(x));
-
-    svg
-      .append("g")
-      .attr("transform", `translate(${marginLeft},${marginTop})`)
-      .call(d3.axisLeft(y));
-  }, [filteredData, width, height]);
-
+      .attr("stroke", "black")
+      .transition()
+      .duration(1000)
+      .attr("width", d => x(d[xVariable]) ?? 0);
+  
+    // Update axes
+    const xAxis = svg
+      .selectAll('.x-axis')
+      .data([null])
+      .join('g')
+      .attr('class', 'x-axis')
+      .attr("transform", `translate(${marginLeft},${height - marginBottom})`);
+  
+    const yAxis = svg
+      .selectAll('.y-axis')
+      .data([null])
+      .join('g')
+      .attr('class', 'y-axis')
+      .attr("transform", `translate(${marginLeft},${marginTop})`);
+  
+    xAxis.transition().duration(1000).call(d3.axisBottom(x));
+    yAxis.transition().duration(1000).call(d3.axisLeft(y));
+  
+  }, [filteredData, width, height, x, y, xVariable, yVariable]);
+  
   return <svg ref={svgRef} width={width} height={height}></svg>;
 };
 

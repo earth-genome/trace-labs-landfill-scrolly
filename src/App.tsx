@@ -27,7 +27,7 @@ import { HeatGapHeader } from "./components/containers/Header";
 import BarChart from "./components/custom-chart-components/BarChart";
 
 const X_VARIABLE = "emissions_quantity_avoided";
-const Y_VARIABLE = "asset_name";
+const Y_VARIABLE = "asset_id";
 const COLOR_VARIABLE = "gap";
 
 const SORT_VARIABLE = "emissions_quantity_avoided";
@@ -849,10 +849,7 @@ function App() {
                       Nam ipsum urna, fringilla sit amet diam eget, faucibus
                       eleifend leo. 
                     </p>
-                    <div
-                      className="size-[500px]"
-                    
-                    >
+                    <div className="size-[500px]">
                       <ParentSize>
                         {({ width, height }) => {
                           return (
