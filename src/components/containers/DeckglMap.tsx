@@ -37,9 +37,7 @@ const initialViewState = {
 };
 const DeckglMap = memo(
   ({
-    zoomToWhichState,
-    zoomToWhichCounty,
-    geographyData,
+
     data,
     colorVariable,
     xVariable,
@@ -48,10 +46,11 @@ const DeckglMap = memo(
     height,
     currentStepIndex = 0,
     STEP_CONDITIONS,
+    highlightColor = [121, 180, 173, 255],
+    defaultColor = [121, 180, 173, 100],
+    strokeColor = [57, 144, 153, 255],
   }: {
-    zoomToWhichState: Record<string, any>; // Adjust type as necessary
-    zoomToWhichCounty: Record<string, any>; // Adjust type as necessary
-    geographyData: GeoJSON.FeatureCollection;
+
     data: any; // Assuming GeoJSON type, adjust if necessary
     colorVariable: string;
     xVariable: string;
@@ -60,6 +59,9 @@ const DeckglMap = memo(
     height: number;
     currentStepIndex: number;
     STEP_CONDITIONS: Record<number, (d: any) => boolean>;
+    highlightColor: number[];
+    defaultColor: number[];
+    strokeColor: number[];
   }) => {
     const [viewState, setViewState] = useState(initialViewState);
 
@@ -76,7 +78,7 @@ const DeckglMap = memo(
 
       return {
         radius: isHighlighted ? 10 : 1,
-        fillColor: isHighlighted ? COLORS.BLACK : COLORS.LIGHT_GRAY,
+        fillColor: isHighlighted ? highlightColor : defaultColor,
         lineWidth: isHighlighted ? 1 : 0,
       };
     }, []);
@@ -89,7 +91,7 @@ const DeckglMap = memo(
           new GeoJsonLayer({
             id: "world-layer",
             data: worldGEOJSON,
-            getFillColor: [0, 255, 0, 2],
+            getFillColor: [231, 242, 206, 12],
             wireframe: true,
             pickable: true,
             autoHighlight: false,
@@ -129,7 +131,7 @@ const DeckglMap = memo(
             lineWidthScale: 1,
             lineWidthMinPixels: 0,
             lineWidthMaxPixels: 100,
-            getLineColor: [0, 0, 0],
+            getLineColor: strokeColor,
             getLineWidth: (d) =>
               getScatterplotConfig(currentStepIndex, d).lineWidth,
             transitions: {
@@ -154,7 +156,7 @@ const DeckglMap = memo(
             pickable: false,
           }),
         ].filter(Boolean),
-      [geographyData, data, currentStepIndex, getScatterplotConfig]
+      [ data, currentStepIndex, getScatterplotConfig]
     );
 
     const hoverLayer = useMemo(() => {

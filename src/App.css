@@ -11,7 +11,7 @@
   max-width: calc(100% - 40px * 2);
   box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.5);
 
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.763);
   border: 2px solid #000;
   border-radius: 0px;
   color: #333;
@@ -27,11 +27,8 @@ h1#interactive-heading {
   margin: 0;
   padding: 0;
   border: 0;
-  text-size-adjust: 100%;
-  font: inherit;
+
   vertical-align: baseline;
-  color: var(--color-content-primary, #121212);
-  font-family: "nyt-cheltenham", georgia, "times new roman", times, serif;
   position: relative;
   margin-bottom: 1.25rem;
   width: 100%;
@@ -39,27 +36,15 @@ h1#interactive-heading {
   margin-right: auto;
   max-width: 1024px;
   text-align: center;
-  font-style: normal;
-  font-weight: 500;
-  text-rendering: optimizeLegibility;
-  -webkit-font-feature-settings: "kern";
-  font-size: 47px;
+
   line-height: 54px;
 }
 p {
-  padding: 0;
-  border: 0;
-  text-size-adjust: 100%;
-  font: inherit;
   vertical-align: baseline;
   overflow-wrap: break-word;
-  color: var(--color-content-secondary, #363636);
-  font-family: nyt-imperial, georgia, "times new roman", times, serif;
+
   max-width: 600px;
-  margin-bottom: 0.9375rem;
-  margin-top: 0;
-  font-size: 1.25rem;
-  line-height: 1.875rem;
+
   width: 95%;
   text-align: center;
   margin-left: auto;
