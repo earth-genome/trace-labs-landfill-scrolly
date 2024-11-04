@@ -128,9 +128,9 @@ function App() {
                       height={height}
                       currentStepIndex={currentStepIndex}
                       STEP_CONDITIONS={STEP_CONDITIONS}
-                      highlightColor={[234, 234, 234, 255]}
-                      defaultColor={[255, 255, 255, 100]}
-                      strokeColor={[255, 255, 255, 20]}
+                      highlightColor={[100, 100, 100, 255]}
+                      defaultColor={[100, 100, 100, 200]}
+                      strokeColor={[234, 234, 234, 255]}
                     />
                   );
                 }}
