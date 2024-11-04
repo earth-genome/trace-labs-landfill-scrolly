@@ -1,30 +1,26 @@
 #g-header-container {
   color: #333;
-  margin: 0;
+
   vertical-align: baseline;
 
-  padding: 20px;
   z-index: 100;
   box-sizing: border-box;
+}
+
+#interactive-header {
   max-width: calc(100% - 40px * 2);
   box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.5);
 
-  width: 580px;
   background-color: white;
   border: 2px solid #000;
   border-radius: 0px;
-}
-#interactive-header {
   color: #333;
-  margin: 0;
-  padding: 0;
+  margin: 0 auto;
+  padding: 20px 25px 18px 25px !important;
   border: 0;
   text-size-adjust: 100%;
   font: inherit;
-  vertical-align: baseline;
-  display: block;
-  margin-top: 0px;
-  padding-top: 25px;
+  z-index: 1;
 }
 
 h1#interactive-heading {

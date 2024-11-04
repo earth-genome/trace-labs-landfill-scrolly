@@ -89,7 +89,7 @@ const DeckglMap = memo(
           new GeoJsonLayer({
             id: "world-layer",
             data: worldGEOJSON,
-            getFillColor: [255, 0, 0, 2],
+            getFillColor: [0, 255, 0, 2],
             wireframe: true,
             pickable: true,
             autoHighlight: false,

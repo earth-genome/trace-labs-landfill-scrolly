@@ -776,100 +776,98 @@ function App() {
   return (
     <div className=" relative ">
       <main className="flex flex-col lg:ml-2 ">
-        <header className="w-full bg-transparent">
-          {/* <HeatGapHeader countrySelector={allCountries} /> */}
-        </header>
-
+        <h1>WTF</h1>
+    
         <div
-          className="flex flex-col items-center justify-center"
-          style={{ margin: "0vh", border: "2px dashed skyblue" }}
+          className=" relative z-[-1]"
+          style={{ border: "2px dashed skyblue" }}
         >
-          <div
-            style={{ position: "sticky", top: 0, border: "1px solid orchid" }}
-          >
-            I'm sticky. The current triggered step index is: {currentStepIndex}
-            <div className="w-screen h-screen stick  md:pt-0 rounded  md:col-span-2 lg:col-span-4 ">
-              <Slider
+          {/* NOTE: Sticky Map Container */}
+          <div className="sticky w-full h-screen top-0 overflow-hidden flex items-center justify-center">
+            {/* I'm sticky. The current triggered step index is: {currentStepIndex} */}
+
+            {/* <Slider
                 className="w-full"
                 defaultValue={[1]}
                 max={1}
                 step={0.1}
                 onValueChange={(value) => setSliderValue(value)}
-              />
-              {/*  aspect-[4/3] md:aspect-[16/9]  */}
-              <div className=" w-full h-full flex flex-col md:flex-row">
-                <figure
-                  ref={parentRef}
-                  className="flex-grow max-md:h-[205px] relative z-10  lg:order-last"
-                >
-                  <ParentSize>
-                    {({ width, height }) => {
-                      return (
-                        <DeckglMap
-                          zoomToWhichState={""}
-                          zoomToWhichCounty={""}
-                          geographyData={[]}
-                          data={SORTED_DATA}
-                          colorVariable={COLOR_VARIABLE}
-                          xVariable={X_VARIABLE}
-                          yVariable={Y_VARIABLE}
-                          width={width}
-                          currentStepIndex={currentStepIndex}
-                          STEP_CONDITIONS={STEP_CONDITIONS}
-                        />
-                      );
-                    }}
-                  </ParentSize>
-                </figure>
-              </div>
-            </div>
-          </div>
-          <Scrollama offset={0.5} onStepEnter={onStepEnter} debug>
-            {[1, 2, 3, 4, 5].map((_, stepIndex) => (
-              <Step data={stepIndex} key={stepIndex}>
-                <div
-                  style={{
-                    marginTop: `${
-                      stepIndex == 0 ? "30vh" : 50 * stepIndex + "vh"
-                    }`,
-                    marginBottom: stepIndex == 4 ? "50vh" : 0,
-                  }}
-                  id="g-header-container"
-                >
-                  <header id="interactive-header">
-                    <h1 id="interactive-heading" data-testid="headline">
-                      Lorem ipsum dolor sit amet,
-                    </h1>
+              /> */}
 
-                    <p id="interactive-leadin" data-testid="interactive-leadin">
-                      What is this tool...Lorem ipsum dolor sit amet,
-                      consectetur adipiscing elit. Vestibulum fermentum, nibh et
-                      posuere posuere, nisi velit accumsan libero, vitae luctus
-                      justo mi a est. Morbi sel, vitae pharetra ante euismod ac.
-                      Nam ipsum urna, fringilla sit amet diam eget, faucibus
-                      eleifend leo. 
-                    </p>
-                    <div className="size-[500px]">
-                      <ParentSize>
-                        {({ width, height }) => {
-                          return (
-                            <BarChart
-                              width={width}
-                              height={height}
-                              data={SORTED_DATA}
-                              stepIndex={currentStepIndex}
-                              xVariable={X_VARIABLE}
-                              yVariable={Y_VARIABLE}
-                            />
-                          );
-                        }}
-                      </ParentSize>
-                    </div>
-                  </header>
-                </div>
-              </Step>
-            ))}
-          </Scrollama>
+            <figure ref={parentRef} className="w-full h-full">
+              <ParentSize>
+                {({ width, height }) => {
+                  return (
+                    <DeckglMap
+                      zoomToWhichState={""}
+                      zoomToWhichCounty={""}
+                      geographyData={[]}
+                      data={SORTED_DATA}
+                      colorVariable={COLOR_VARIABLE}
+                      xVariable={X_VARIABLE}
+                      yVariable={Y_VARIABLE}
+                      width={width}
+                      currentStepIndex={currentStepIndex}
+                      STEP_CONDITIONS={STEP_CONDITIONS}
+                    />
+                  );
+                }}
+              </ParentSize>
+            </figure>
+          </div>
+
+          {/* NOTE: Steps Container */}
+
+          <div className="relative z-10 mt-[-100vh] w-full">
+            <Scrollama offset={0.5} onStepEnter={onStepEnter} debug>
+              {[1, 2, 3].map((_, stepIndex) => (
+                <Step data={stepIndex} key={stepIndex}>
+                  <div
+                    style={{
+                      paddingTop: `${stepIndex == 0 ? "10vh" : "30vh"}`,
+                      paddingBottom: "80vh",
+                    }}
+                    id="g-header-container"
+                    className="w-full  flex justify-center items-center"
+                  >
+                    <header id="interactive-header" className="h-[800px]">
+                      <h1 id="interactive-heading" data-testid="headline">
+                        Methane Matters
+                      </h1>
+
+                      <p
+                        id="interactive-leadin"
+                        data-testid="interactive-leadin"
+                      >
+                        What is this tool...Lorem ipsum dolor sit amet,
+                        consectetur adipiscing elit. Vestibulum fermentum, nibh
+                        et posuere posuere, nisi velit accumsan libero, vitae
+                        luctus justo mi a est. Morbi sel, vitae pharetra ante
+                        euismod ac. Nam ipsum urna, fringilla sit amet diam
+                        eget, faucibus eleifend leo. 
+                      </p>
+                      <div className="size-[400px]">
+                        <ParentSize>
+                          {({ width, height }) => {
+                            return (
+                              <BarChart
+                                width={width}
+                                height={height}
+                                data={SORTED_DATA}
+                                stepIndex={currentStepIndex}
+                                xVariable={X_VARIABLE}
+                                yVariable={Y_VARIABLE}
+                              />
+                            );
+                          }}
+                        </ParentSize>
+                      </div>
+                    </header>
+                  </div>
+                </Step>
+              ))}
+            </Scrollama>
+          </div>
         </div>
 
         <footer id="interactive-header">
