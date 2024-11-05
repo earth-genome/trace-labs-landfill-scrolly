@@ -31,7 +31,7 @@ const elevationScale = d3.scaleLinear().domain([-1, 1]).range([0, 2000]);
 const initialViewState = {
   longitude: 0,
   latitude: 0,
-  zoom: 1.8,
+  zoom: 1,
   pitch: 0,
   bearing: 0,
 };
@@ -188,7 +188,7 @@ const DeckglMap = memo(
           latitude: 23.6345,
           zoom: 5,
           transitionInterpolator: new FlyToInterpolator({
-            speed: 0.4,
+            speed: 0.6,
             curve: 1.2,
           }),
           transitionDuration: 1000,
@@ -199,7 +199,7 @@ const DeckglMap = memo(
         setViewState({
           ...initialViewState,
           transitionInterpolator: new FlyToInterpolator({
-            speed: 0.4,
+            speed: 0.6,
             curve: .8,
           }),
           transitionDuration: 1000,
