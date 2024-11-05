@@ -1,7 +1,9 @@
 import React, { useRef, useEffect, useMemo } from "react";
 import * as d3 from "d3";
+
 const Y_MAX = 191043.9235;
 const margin = { top: 20, right: 20, bottom: 30, left: 40 };
+
 const BarChart = ({
   data,
   width = 928,
@@ -9,23 +11,15 @@ const BarChart = ({
   xVariable,
   yVariable,
   horizontal = false,
-}: {
-  data: any[];
-  width?: number;
-  height?: number;
-  xVariable: string;
-  yVariable: string;
-  horizontal?: boolean;
 }) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
 
-  // Define margins
-  const innerWidth = useMemo(() => {
-    return width - margin.left - margin.right;
-  }, [width]);
-  const innerHeight = useMemo(() => {
-    return height - margin.top - margin.bottom;
-  }, [height]);
+  // Define inner dimensions
+  const innerWidth = useMemo(() => width - margin.left - margin.right, [width]);
+  const innerHeight = useMemo(
+    () => Math.max(350, height - margin.top - margin.bottom),
+    [height]
+  );
 
   // Scales
   const xScale = useMemo(() => {
@@ -61,59 +55,6 @@ const BarChart = ({
       .attr("class", "chart-group")
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    // Bind data to rectangles
-    const bars = chartGroup
-      .selectAll(".bar")
-      .data(data, (d: any) => d.asset_id);
-
-    // Remove old bars
-    bars
-      .exit()
-      .transition()
-      .duration(500)
-      .attr(horizontal ? "width" : "height", 0)
-      .remove();
-
-    // Update existing bars
-    // bars
-    //   .transition()
-    //   .duration(500)
-    //   .attr("x", (d) => (horizontal ? 0 : xScale(d[xVariable]) ?? 0))
-    //   .attr("y", (d) =>
-    //     horizontal ? yScale(d[yVariable]) ?? 0 : yScale(d[yVariable]) ?? 0
-    //   )
-    //   .attr("width", (d) =>
-    //     horizontal ? xScale(d[xVariable]) ?? 0 : xScale.bandwidth()
-    //   )
-    //   .attr("height", (d) =>
-    //     horizontal ? yScale.bandwidth() : innerHeight - yScale(d[yVariable])
-    //   );
-
-    // Add new bars
-    bars
-      .enter()
-      .append("rect")
-      .attr("class", "bar")
-      .attr("fill", "lightgray")
-      .attr("stroke", "black")
-      .attr("x", (d) => (horizontal ? 0 : xScale(d[xVariable]) ?? 0))
-      .attr("y", (d) => (horizontal ? yScale(d[yVariable]) ?? 0 : innerHeight))
-      .attr("width", (d) => (horizontal ? 0 : xScale.bandwidth()))
-      .attr("height", (d) => (horizontal ? yScale.bandwidth() : 0))
-      .transition()
-      .duration(500)
-      .attr("width", (d) =>
-        horizontal ? xScale(d[xVariable]) ?? 0 : xScale.bandwidth()
-      )
-      .attr("height", (d) => {
-        // horizontal ? yScale.bandwidth() : innerHeight - yScale(d[yVariable]
-        console.log(d.emissions_quantity_avoided);
-        return 10;
-      })
-      .attr("y", (d) =>
-        horizontal ? yScale(d[yVariable]) ?? 0 : yScale(d[yVariable]) ?? 0
-      );
-
     // Axes
     const xAxis = horizontal ? d3.axisBottom(xScale) : d3.axisBottom(xScale);
     const yAxis = horizontal ? d3.axisLeft(yScale) : d3.axisLeft(yScale);
@@ -140,6 +81,74 @@ const BarChart = ({
       .transition()
       .duration(500)
       .call(yAxis);
+
+    // Bars
+    chartGroup
+      .selectAll(".bar")
+      .data(data, (d) => d.asset_id)
+      .join(
+        (enter) =>
+          enter
+            .append("rect")
+            .attr("class", "bar")
+            .attr("fill", "lightgray")
+            .attr("stroke", "black")
+            // Initial position and size of entering bars
+            .attr("x", (d) => (horizontal ? 0 : xScale(d[xVariable]) ?? 0))
+            .attr("y", (d) =>
+              horizontal ? yScale(d[yVariable]) ?? 0 : innerHeight
+            )
+            .attr("width", (d) => (horizontal ? 0 : xScale.bandwidth()))
+            .attr("height", (d) => (horizontal ? yScale.bandwidth() : 0))
+            .call((enter) =>
+              enter
+                .transition()
+                .duration(500)
+                // Final position and size after transition
+                .attr("x", (d) => (horizontal ? 0 : xScale(d[xVariable]) ?? 0))
+                .attr("y", (d) =>
+                  horizontal
+                    ? yScale(d[yVariable]) ?? 0
+                    : yScale(d[yVariable]) ?? 0
+                )
+                .attr("width", (d) =>
+                  horizontal ? xScale(d[xVariable]) ?? 0 : xScale.bandwidth()
+                )
+                .attr("height", (d) => {
+                  return horizontal
+                    ? yScale.bandwidth()
+                    : innerHeight - yScale(d[yVariable]);
+                })
+            ),
+        (update) =>
+          update.call((update) =>
+            update
+              .transition()
+              .duration(500)
+              .attr("x", (d) => (horizontal ? 0 : xScale(d[xVariable]) ?? 0))
+              .attr("y", (d) =>
+                horizontal
+                  ? yScale(d[yVariable]) ?? 0
+                  : yScale(d[yVariable]) ?? 0
+              )
+              .attr("width", (d) =>
+                horizontal ? xScale(d[xVariable]) ?? 0 : xScale.bandwidth()
+              )
+              .attr("height", (d) => {
+                return horizontal
+                  ? yScale.bandwidth()
+                  : innerHeight - yScale(d[yVariable]);
+              })
+          ),
+        (exit) =>
+          exit.call((exit) =>
+            exit
+              .transition()
+              .duration(500)
+              .attr(horizontal ? "width" : "height", 0)
+              .remove()
+          )
+      );
   }, [
     data,
     xScale,
