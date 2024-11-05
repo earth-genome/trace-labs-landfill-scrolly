@@ -136,26 +136,27 @@ function App() {
                 }}
               </ParentSize>
             </figure>
-            <figure
-              style={{ display: currentStepIndex == 0 ? "none" : "block" }}
-              className="size-[50px] absolute bottom-0 left-1/2"
+            {/* NOTE: Bottom Bar Chart Container */}
+            <div
+              style={{ display: currentStepIndex == 0 ? "none" : "flex" }}
+              className="h-[400px] w-full absolute bottom-0 left-0 justify-center items-center"
             >
-              <ParentSize>
-                {({ width, height }) => {
-                  return (
-                    <PieChart
-                      data={[
-                        { name: "A", value: 0.25 },
-                        { name: "B", value: 0.75 },
-                      ]}
-                      width={width}
-                      height={height}
-                      colors={["#42959D", "#42959D", "#42959D", "#42959D"]}
-                    />
-                  );
-                }}
-              </ParentSize>
-            </figure>
+              <figure className="h-full w-4/5">
+                {currentStepIndex !== 0 && (
+                  <ParentSize>
+                    {({ width, height }) => (
+                      <BarChart
+                        width={width}
+                        height={height}
+                        data={filteredData}
+                        xVariable={Y_VARIABLE}
+                        yVariable={X_VARIABLE}
+                      />
+                    )}
+                  </ParentSize>
+                )}
+              </figure>
+            </div>
             <div style={{ display: currentStepIndex == 0 ? "none" : "block" }}>
               <Legend />
             </div>
@@ -199,22 +200,6 @@ function App() {
                         et posuere posuere, nisi velit accumsan libero, vitae
                         luctus justo mi a est.
                       </p>
-                      {currentStepIndex !== 0 && (
-                        <div className="h-[400px] w-full">
-                          <ParentSize>
-                            {({ width, height }) => (
-                              <BarChart
-                                width={width}
-                                height={height}
-                                data={filteredData}
-                                stepIndex={stepIndex}
-                                xVariable={Y_VARIABLE}
-                                yVariable={X_VARIABLE}
-                              />
-                            )}
-                          </ParentSize>
-                        </div>
-                      )}
                     </header>
                   </div>
                 </Step>

@@ -19,7 +19,6 @@ const BarChart = ({
 }) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
 
-
   // Define margins
   const innerWidth = useMemo(() => {
     return width - margin.left - margin.right;
@@ -76,19 +75,19 @@ const BarChart = ({
       .remove();
 
     // Update existing bars
-    bars
-      .transition()
-      .duration(500)
-      .attr("x", (d) => (horizontal ? 0 : xScale(d[xVariable]) ?? 0))
-      .attr("y", (d) =>
-        horizontal ? yScale(d[yVariable]) ?? 0 : yScale(d[yVariable]) ?? 0
-      )
-      .attr("width", (d) =>
-        horizontal ? xScale(d[xVariable]) ?? 0 : xScale.bandwidth()
-      )
-      .attr("height", (d) =>
-        horizontal ? yScale.bandwidth() : innerHeight - yScale(d[yVariable])
-      );
+    // bars
+    //   .transition()
+    //   .duration(500)
+    //   .attr("x", (d) => (horizontal ? 0 : xScale(d[xVariable]) ?? 0))
+    //   .attr("y", (d) =>
+    //     horizontal ? yScale(d[yVariable]) ?? 0 : yScale(d[yVariable]) ?? 0
+    //   )
+    //   .attr("width", (d) =>
+    //     horizontal ? xScale(d[xVariable]) ?? 0 : xScale.bandwidth()
+    //   )
+    //   .attr("height", (d) =>
+    //     horizontal ? yScale.bandwidth() : innerHeight - yScale(d[yVariable])
+    //   );
 
     // Add new bars
     bars
@@ -106,9 +105,11 @@ const BarChart = ({
       .attr("width", (d) =>
         horizontal ? xScale(d[xVariable]) ?? 0 : xScale.bandwidth()
       )
-      .attr("height", (d) =>
-        horizontal ? yScale.bandwidth() : innerHeight - yScale(d[yVariable])
-      )
+      .attr("height", (d) => {
+        // horizontal ? yScale.bandwidth() : innerHeight - yScale(d[yVariable]
+        console.log(d.emissions_quantity_avoided);
+        return 10;
+      })
       .attr("y", (d) =>
         horizontal ? yScale(d[yVariable]) ?? 0 : yScale(d[yVariable]) ?? 0
       );

@@ -189,8 +189,9 @@ const DeckglMap = memo(
           zoom: 5,
           transitionInterpolator: new FlyToInterpolator({
             speed: 0.4,
-            curve: 1.8,
+            curve: 1.2,
           }),
+          transitionDuration: 1000,
           transitionDuration: "auto",
           transitionEasing: easeOutExpo,
         });
@@ -199,8 +200,9 @@ const DeckglMap = memo(
           ...initialViewState,
           transitionInterpolator: new FlyToInterpolator({
             speed: 0.4,
-            curve: 1.8,
+            curve: .8,
           }),
+          transitionDuration: 1000,
           transitionDuration: "auto",
           transitionEasing: easeOutExpo,
         });
