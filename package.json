@@ -47,6 +47,7 @@
     "react-scrollama": "^2.3.3",
     "regl-scatterplot": "^1.11.0",
     "tailwind-merge": "^2.5.2",
+    "textures": "^1.2.3",
     "use-debounce": "^10.0.3"
   },
   "devDependencies": {

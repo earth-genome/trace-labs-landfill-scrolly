@@ -10,7 +10,7 @@ const EmissionLegend = () => {
   return (
     <div
       id="legend"
-      className="bg-[#f8f8e9] bg-opacity-10 backdrop-blur-sm p-4 text-sm rounded-md w-64 space-y-4 z-50 absolute bottom-0 left-4"
+      className="bg-[#f8f8e9] bg-opacity-10 backdrop-blur-sm p-4 text-sm rounded-md w-64 space-y-4 z-50 absolute top-0 left-4"
     >
       {/* <!-- Title for legend --> */}
       <div>

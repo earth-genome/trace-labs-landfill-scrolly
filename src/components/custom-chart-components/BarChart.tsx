@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useMemo } from "react";
 import * as d3 from "d3";
+import textures from "textures";
 
 const Y_MAX = 191043.9235;
 const margin = { top: 20, right: 20, bottom: 30, left: 60 };
@@ -46,7 +47,14 @@ const BarChart = ({
     if (!svgRef.current) return;
 
     const svg = d3.select(svgRef.current);
+    // const t = textures
+    //   .lines()
+    //   .orientation("horizontal")
+    //   .strokeWidth(1)
+    //   .shapeRendering("crispEdges")
+    //   .stroke("white");
 
+    // svg.call(t);
     // Create container group
     const chartGroup = svg
       .selectAll(".chart-group")
@@ -55,25 +63,29 @@ const BarChart = ({
       .attr("class", "chart-group")
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    // Axes
+    // NOTE: Axes
     // Axes
     const xAxis = horizontal
-      ? d3.axisBottom(xScale).tickSize(0)
-      : d3.axisBottom(xScale).tickSize(0);
-    const yAxis = horizontal
-      ? d3.axisLeft(yScale).tickSize(0)
-      : d3.axisLeft(yScale).tickSize(0);
+      ? d3.axisBottom(xScale).tickSize(0).tickValues([])
+      : d3.axisBottom(xScale).tickSize(0).tickValues([]);
 
-      svg
+    const yAxis = horizontal
+      ? d3.axisLeft(yScale).tickSize(0).tickValues([])
+      : d3.axisLeft(yScale).tickSize(-innerWidth).tickValues(yScale.ticks(10));
+
+    svg
       .selectAll(".x-axis")
       .data([null])
       .join("g")
       .attr("class", "x-axis")
-      .attr("transform", `translate(${margin.left},${margin.top + innerHeight})`)
+      .attr(
+        "transform",
+        `translate(${margin.left},${margin.top + innerHeight})`
+      )
       .transition()
       .duration(500)
       .call(xAxis)
-      .call(g => horizontal ? g.select(".domain").remove() : g); // Remove domain only when horizontal
+      .call((g) => (horizontal ? g.select(".domain").remove() : g)); // Remove domain only when horizontal
 
     svg
       .selectAll(".y-axis")
@@ -84,7 +96,19 @@ const BarChart = ({
       .transition()
       .duration(500)
       .call(yAxis);
+    // Remove domain lines
+    svg.select(".x-axis").select(".domain").remove();
+    svg.select(".y-axis").select(".domain").remove();
 
+    // Style gridlines when not horizontal
+    if (!horizontal) {
+      svg
+        .select(".y-axis")
+        .selectAll(".tick line")
+        .attr("stroke", "white")
+        .attr("stroke-width", 1)
+        .attr("stroke-dasharray", "2,2");
+    }
     // Bars
     chartGroup
       .selectAll(".bar")
@@ -94,7 +118,8 @@ const BarChart = ({
           enter
             .append("rect")
             .attr("class", "bar")
-            .attr("fill", "rgba(121, 180, 173, .7)")
+            // .attr("fill", t.url())
+            .attr("fill", "rgba(121, 180, 173, .5)")
             .attr("stroke", "rgba(121, 180, 173, 255)")
             // Initial position and size of entering bars
             .attr("x", (d) => (horizontal ? 0 : xScale(d[xVariable]) ?? 0))

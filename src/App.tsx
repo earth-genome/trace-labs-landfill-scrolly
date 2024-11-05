@@ -139,7 +139,7 @@ function App() {
               style={{ display: currentStepIndex == 0 ? "none" : "flex" }}
               className="h-[400px] w-full absolute bottom-0 left-0 justify-center items-center"
             >
-              <figure className="h-full w-4/5">
+              <figure className="h-full w-4/5 bg-[hsla(195, 10%, 100%, 0.582)] box-shadow-[0_0_10px_0_rgba(0,0,0,0.1)] rounded-md">
                 {currentStepIndex !== 0 && (
                   <ParentSize>
                     {({ width, height }) => (
@@ -170,9 +170,10 @@ function App() {
                     style={{
                       paddingTop: `${stepIndex == 0 ? "10vh" : "0vh"}`,
                       paddingBottom: "110vh",
+                      opacity: stepIndex == 0 ? 1 : 0,
                     }}
                     id="g-header-container"
-                    className="w-full  flex justify-center items-center"
+                    className="w-full  justify-center items-center"
                   >
                     <header
                       id="interactive-header"
