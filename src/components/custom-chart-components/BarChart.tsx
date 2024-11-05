@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useMemo } from "react";
 import * as d3 from "d3";
 
 const Y_MAX = 191043.9235;
-const margin = { top: 20, right: 20, bottom: 30, left: 40 };
+const margin = { top: 20, right: 20, bottom: 30, left: 60 };
 
 const BarChart = ({
   data,
@@ -29,7 +29,7 @@ const BarChart = ({
           .scaleBand()
           .domain(data.map((d) => d[xVariable]))
           .range([0, innerWidth])
-          .padding(0.1);
+          .padding(0.5);
   }, [data, xVariable, innerWidth, horizontal]);
 
   const yScale = useMemo(() => {
@@ -56,21 +56,24 @@ const BarChart = ({
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
     // Axes
-    const xAxis = horizontal ? d3.axisBottom(xScale) : d3.axisBottom(xScale);
-    const yAxis = horizontal ? d3.axisLeft(yScale) : d3.axisLeft(yScale);
+    // Axes
+    const xAxis = horizontal
+      ? d3.axisBottom(xScale).tickSize(0)
+      : d3.axisBottom(xScale).tickSize(0);
+    const yAxis = horizontal
+      ? d3.axisLeft(yScale).tickSize(0)
+      : d3.axisLeft(yScale).tickSize(0);
 
-    svg
+      svg
       .selectAll(".x-axis")
       .data([null])
       .join("g")
       .attr("class", "x-axis")
-      .attr(
-        "transform",
-        `translate(${margin.left},${margin.top + innerHeight})`
-      )
+      .attr("transform", `translate(${margin.left},${margin.top + innerHeight})`)
       .transition()
       .duration(500)
-      .call(xAxis);
+      .call(xAxis)
+      .call(g => horizontal ? g.select(".domain").remove() : g); // Remove domain only when horizontal
 
     svg
       .selectAll(".y-axis")
@@ -91,8 +94,8 @@ const BarChart = ({
           enter
             .append("rect")
             .attr("class", "bar")
-            .attr("fill", "lightgray")
-            .attr("stroke", "black")
+            .attr("fill", "rgba(121, 180, 173, .7)")
+            .attr("stroke", "rgba(121, 180, 173, 255)")
             // Initial position and size of entering bars
             .attr("x", (d) => (horizontal ? 0 : xScale(d[xVariable]) ?? 0))
             .attr("y", (d) =>
