@@ -4,7 +4,8 @@ import textures from "textures";
 
 const Y_MAX = 191043.9235;
 const margin = { top: 20, right: 20, bottom: 30, left: 60 };
-
+const defaultColor = "hsla(60, 20%, 97%, 0.2)";
+const highlightColor = "rgba(121, 180, 173, .6)";
 const BarChart = ({
   data,
   width = 928,
@@ -12,6 +13,7 @@ const BarChart = ({
   xVariable,
   yVariable,
   horizontal = false,
+  fillCondition,
 }) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
 
@@ -71,7 +73,8 @@ const BarChart = ({
 
     const yAxis = horizontal
       ? d3.axisLeft(yScale).tickSize(0).tickValues([])
-      : d3.axisLeft(yScale).tickSize(-innerWidth).tickValues(yScale.ticks(10));
+      : d3.axisLeft(yScale).tickSize(0).tickValues(yScale.ticks(5));
+      // .tickSize(-innerWidth).tickValues(yScale.ticks(10));
 
     svg
       .selectAll(".x-axis")
@@ -85,8 +88,8 @@ const BarChart = ({
       .transition()
       .duration(500)
       .call(xAxis)
-      .call((g) => (horizontal ? g.select(".domain").remove() : g)); // Remove domain only when horizontal
-
+      // .call((g) => (horizontal ? g.select(".domain").remove() : g)); // Remove domain only when horizontal
+      .call((g) => (horizontal ? g.select(".domain").remove() : g));
     svg
       .selectAll(".y-axis")
       .data([null])
@@ -101,14 +104,14 @@ const BarChart = ({
     svg.select(".y-axis").select(".domain").remove();
 
     // Style gridlines when not horizontal
-    if (!horizontal) {
-      svg
-        .select(".y-axis")
-        .selectAll(".tick line")
-        .attr("stroke", "white")
-        .attr("stroke-width", 1)
-        .attr("stroke-dasharray", "2,2");
-    }
+    // if (!horizontal) {
+    //   svg
+    //     .select(".y-axis")
+    //     .selectAll(".tick line")
+    //     .attr("stroke", "white")
+    //     .attr("stroke-width", 1)
+    //     .attr("stroke-dasharray", "2,2");
+    // }
     // Bars
     chartGroup
       .selectAll(".bar")
@@ -119,8 +122,14 @@ const BarChart = ({
             .append("rect")
             .attr("class", "bar")
             // .attr("fill", t.url())
-            .attr("fill", "rgba(121, 180, 173, .5)")
-            .attr("stroke", "rgba(121, 180, 173, 255)")
+            // .attr("fill", "rgba(121, 180, 173, .5)")
+            .attr("fill", (d) =>
+              fillCondition(d) ? highlightColor : defaultColor
+            )
+            .attr("stroke", (d) =>
+              fillCondition(d) ? highlightColor : defaultColor
+            )
+
             // Initial position and size of entering bars
             .attr("x", (d) => (horizontal ? 0 : xScale(d[xVariable]) ?? 0))
             .attr("y", (d) =>
@@ -147,6 +156,12 @@ const BarChart = ({
                     ? yScale.bandwidth()
                     : innerHeight - yScale(d[yVariable]);
                 })
+                .attr("fill", (d) =>
+                  fillCondition(d) ? highlightColor : defaultColor
+                )
+                .attr("stroke", (d) =>
+                  fillCondition(d) ? highlightColor : defaultColor
+                )
             ),
         (update) =>
           update.call((update) =>
@@ -167,6 +182,12 @@ const BarChart = ({
                   ? yScale.bandwidth()
                   : innerHeight - yScale(d[yVariable]);
               })
+              .attr("fill", (d) =>
+                fillCondition(d) ? "rgba(121, 180, 173, .5)" : defaultColor
+              )
+              .attr("stroke", (d) =>
+                fillCondition(d) ? "rgba(121, 180, 173, .5)" : defaultColor
+              )
           ),
         (exit) =>
           exit.call((exit) =>
@@ -187,6 +208,7 @@ const BarChart = ({
     horizontal,
     xVariable,
     yVariable,
+    fillCondition,
   ]);
 
   return <svg ref={svgRef} width={width} height={height}></svg>;

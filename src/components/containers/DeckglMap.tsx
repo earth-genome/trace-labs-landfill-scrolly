@@ -31,13 +31,12 @@ const elevationScale = d3.scaleLinear().domain([-1, 1]).range([0, 2000]);
 const initialViewState = {
   longitude: 0,
   latitude: 0,
-  zoom: 1,
+  zoom: 1.5,
   pitch: 0,
   bearing: 0,
 };
 const DeckglMap = memo(
   ({
-
     data,
     colorVariable,
     xVariable,
@@ -50,7 +49,6 @@ const DeckglMap = memo(
     defaultColor = [121, 180, 173, 100],
     strokeColor = [57, 144, 153, 255],
   }: {
-
     data: any; // Assuming GeoJSON type, adjust if necessary
     colorVariable: string;
     xVariable: string;
@@ -148,38 +146,48 @@ const DeckglMap = memo(
                 easing: d3.easeCubicInOut,
               },
             },
+            // Hover
+            onHover: (info, event) => {
+              if (info.object) {
+                setHoverInfo(info);
+              } else {
+                setHoverInfo(null);
+              }
+              //If this callback returns a truthy value, the hover event is marked as handled and will not bubble up to the onHover callback of the DeckGL canvas.
+              return true;
+            },
             updateTriggers: {
               getRadius: [currentStepIndex], // Tell deck.gl to re-evaluate when currentStepIndex changes
               getFillColor: [currentStepIndex],
               getLineWidth: [currentStepIndex],
             },
-            pickable: false,
+            pickable: true,
           }),
         ].filter(Boolean),
-      [ data, currentStepIndex, getScatterplotConfig]
+      [data, currentStepIndex, getScatterplotConfig]
     );
 
-    const hoverLayer = useMemo(() => {
-      if (!hoverInfo || !hoverInfo.object) return null;
-      return new GeoJsonLayer({
-        id: "hover-layer",
-        data: [hoverInfo.object],
-        pickable: false,
-        stroked: true,
-        filled: true,
-        getFillColor: (d) => {
-          // const { r, g, b } = d3.color(colorScale(d.properties[colorVariable]));
-          const a = 255;
-          return [234, 234, 234, a];
-        },
-        lineWidthUnits: "pixels",
-        lineWidthScale: 1,
-        lineWidthMinPixels: 2,
-        lineWidthMaxPixels: 10,
-        getLineColor: [255, 255, 255, 255],
-        getLineWidth: 2,
-      });
-    }, [hoverInfo]);
+    // const hoverLayer = useMemo(() => {
+    //   if (!hoverInfo || !hoverInfo.object) return null;
+    //   return new GeoJsonLayer({
+    //     id: "hover-layer",
+    //     data: [hoverInfo.object],
+    //     pickable: false,
+    //     stroked: true,
+    //     filled: true,
+    //     getFillColor: (d) => {
+    //       // const { r, g, b } = d3.color(colorScale(d.properties[colorVariable]));
+    //       const a = 255;
+    //       return [234, 234, 234, a];
+    //     },
+    //     lineWidthUnits: "pixels",
+    //     lineWidthScale: 1,
+    //     lineWidthMinPixels: 2,
+    //     lineWidthMaxPixels: 10,
+    //     getLineColor: [255, 255, 255, 255],
+    //     getLineWidth: 2,
+    //   });
+    // }, [hoverInfo]);
 
     useEffect(() => {
       if (currentStepIndex === 1) {
@@ -191,8 +199,8 @@ const DeckglMap = memo(
             speed: 0.6,
             curve: 1.2,
           }),
-          transitionDuration: 1000,
-          transitionDuration: "auto",
+          transitionDuration: 2000,
+          // transitionDuration: "auto",
           transitionEasing: easeOutExpo,
         });
       } else {
@@ -200,10 +208,10 @@ const DeckglMap = memo(
           ...initialViewState,
           transitionInterpolator: new FlyToInterpolator({
             speed: 0.6,
-            curve: .8,
+            curve: 0.8,
           }),
-          transitionDuration: 1000,
-          transitionDuration: "auto",
+          transitionDuration: 2000,
+          // transitionDuration: "auto",
           transitionEasing: easeOutExpo,
         });
       }
@@ -220,14 +228,13 @@ const DeckglMap = memo(
           initialViewState={viewState}
           // onViewStateChange={onViewStateChange}
           controller={{
-            doubleClickZoom: false,
+            doubleClickZoom: true,
             scrollZoom: false,
             touchRotate: true,
             minZoom: 0.000001,
             maxZoom: 10,
           }}
           layers={[...layers].filter(Boolean)}
-          onHover={(info) => setHoverInfo(info.object ? info : null)}
         >
           <Map
             className="absolute top-0 left-0 w-full h-full"
@@ -236,20 +243,15 @@ const DeckglMap = memo(
               "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
             }
           />
-          {/* {hoverInfo && hoverInfo.object && (
-          <Tooltip
-            left={hoverInfo.x + 10}
-            top={hoverInfo.y + 10}
-            county={hoverInfo.object.properties.NAME}
-            state={hoverInfo.object.properties.STATENAME}
-            gap={twoSigFigFormatter(hoverInfo.object.properties[colorVariable])}
-            worry={twoSigFigFormatter(hoverInfo.object.properties[yVariable])}
-            rating={twoSigFigFormatter(hoverInfo.object.properties[xVariable])}
-            showMapUXInfo={true}
-            containerWidth={width}
-            containerHeight={height}
-          />
-        )} */}
+          {hoverInfo && hoverInfo.object && (
+            <Tooltip
+              left={hoverInfo.x + 10}
+              top={hoverInfo.y + 10}
+              showMapUXInfo={true}
+              containerWidth={width}
+              containerHeight={height}
+            />
+          )}
         </DeckGL>
       </map>
     );

@@ -34,6 +34,7 @@ const X_VARIABLE = "emissions_quantity_avoided";
 const Y_VARIABLE = "asset_id";
 const COLOR_VARIABLE = "gap";
 
+const topNumber = 100;
 const SORT_VARIABLE = "emissions_quantity_avoided";
 const SORTED_DATA = data.sort((a, b) => +b[SORT_VARIABLE] - +a[SORT_VARIABLE]);
 const top100MexicoIds = new Set(
@@ -43,7 +44,7 @@ const top100MexicoIds = new Set(
         b.emissions_quantity_avoided - a.emissions_quantity_avoided ||
         a.asset_id.localeCompare(b.asset_id)
     )
-    .slice(0, 100)
+    .slice(0, topNumber)
     .map((d) => d.asset_id)
 );
 
@@ -54,7 +55,7 @@ const top100AnnexIds = new Set(
         b.emissions_quantity_avoided - a.emissions_quantity_avoided ||
         a.asset_id.localeCompare(b.asset_id)
     )
-    .slice(0, 100)
+    .slice(0, topNumber)
     .map((d) => d.asset_id)
 );
 
@@ -63,11 +64,12 @@ SORTED_DATA.forEach((d, i) => {
   d["lat"] = +d["lat"];
   d["lon"] = +d["lon"];
   d["annexOrNot"] = d["annexOrNot"] == "true" ? true : false;
-  d.top100OrNot = i < 100;
+  d.top100OrNot = i < topNumber;
   d.top100InMexico = top100MexicoIds.has(d.asset_id);
   d.top100InAnnex = top100AnnexIds.has(d.asset_id);
 });
-
+const TotalNumberOfBars = 300;
+const filteredData = SORTED_DATA.slice(0, TotalNumberOfBars);
 function App() {
   const { parentRef } = useParentSize();
   const [sliderValue, setSliderValue] = useState([33]);
@@ -79,21 +81,13 @@ function App() {
   const onStepEnter = ({ data }) => {
     setCurrentStepIndex(data);
   };
-  // <StackedBarChart
-  //                 width={width}
-  //                 height={height}
-  //                 data={stackedBarChartData}
-  //                 X_VARIABLE={"state"}
-  //                 Y_VARIABLE={"population"}
-  //                 GROUP_VARIABLE={"age"}
-  //               />
-  const filteredData = useStepFilteredData(SORTED_DATA, currentStepIndex);
+
   return (
     <div className=" relative ">
       <main className="flex flex-col ">
-        <div className=" relative z-[-1]">
+        <div className=" relative ">
           {/* NOTE: Sticky Map Container */}
-          <div className="sticky w-full h-screen top-0 overflow-hidden flex flex-col items-center justify-center">
+          <div className="sticky w-full h-screen top-0 overflow-hidden flex flex-col items-center justify-center z-[100]">
             {/* I'm sticky. The current triggered step index is: {currentStepIndex} */}
             {/* <Slider
                 className="w-full"
@@ -104,7 +98,7 @@ function App() {
               /> */}
 
             <h1
-              className="z-[100] text-lg font-semibold opacity-40"
+              className=" text-lg font-semibold opacity-40"
               style={{ display: currentStepIndex == 0 ? "none" : "block" }}
             >
               Methane Matters
@@ -115,7 +109,7 @@ function App() {
             >
               {STEP_METADATA[currentStepIndex]?.label}
             </h2>
-            <figure ref={parentRef} className="w-full h-full">
+            <figure ref={parentRef} className="w-full h-full z-50">
               <ParentSize>
                 {({ width, height }) => {
                   return (
@@ -128,7 +122,6 @@ function App() {
                       height={height}
                       currentStepIndex={currentStepIndex}
                       STEP_CONDITIONS={STEP_CONDITIONS}
-                    
                     />
                   );
                 }}
@@ -139,7 +132,7 @@ function App() {
               style={{ display: currentStepIndex == 0 ? "none" : "flex" }}
               className="h-[400px] w-full absolute bottom-0 left-0 justify-center items-center"
             >
-              <figure className="h-full w-4/5 bg-[hsla(195, 10%, 100%, 0.582)] box-shadow-[0_0_10px_0_rgba(0,0,0,0.1)] rounded-md">
+              <figure className="h-full w-4/5 bg-[hsla(195, 10%, 100%, 0.582)] box-shadow-[0_0_10px_0_rgba(0,0,0,0.1)] rounded-md z-[50]">
                 {currentStepIndex !== 0 && (
                   <ParentSize>
                     {({ width, height }) => (
@@ -147,6 +140,7 @@ function App() {
                         width={width}
                         height={height}
                         data={filteredData}
+                        fillCondition={STEP_CONDITIONS[currentStepIndex]}
                         xVariable={Y_VARIABLE}
                         yVariable={X_VARIABLE}
                       />
@@ -162,7 +156,7 @@ function App() {
 
           {/* NOTE: Steps Container */}
 
-          <div className="relative z-10 mt-[-100vh] w-full">
+          <div className="relative z-10 mt-[-100vh] w-full ">
             <Scrollama offset={0.4} onStepEnter={onStepEnter}>
               {[1, 2, 3, 4].map((_, stepIndex) => (
                 <Step data={stepIndex} key={stepIndex}>
@@ -173,7 +167,7 @@ function App() {
                       opacity: stepIndex == 0 ? 1 : 0,
                     }}
                     id="g-header-container"
-                    className="w-full  justify-center items-center"
+                    className="w-full  justify-center items-center "
                   >
                     <header
                       id="interactive-header"

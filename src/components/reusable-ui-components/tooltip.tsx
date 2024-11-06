@@ -1,14 +1,10 @@
 import React, { useMemo } from "react";
-import { useMapStore } from "@/lib/store";
+
 import { SquareDashedMousePointer } from "lucide-react";
 const Tooltip = ({
   left,
   top,
-  county,
-  state,
-  gap,
-  worry,
-  rating,
+
   showMapUXInfo = false,
   showScatterplotUXInfo = false,
   containerWidth,
@@ -26,26 +22,23 @@ const Tooltip = ({
   containerWidth: number;
   containerHeight: number;
 }) => {
-  const { colorScale } = useMapStore();
-
   // Memoize the styles to avoid creating new objects on each render
   const tooltipStyle = useMemo(
     () => ({
       left: left > containerWidth / 2 ? left : left,
-      top: top > containerHeight / 2 ? top  : top,
+      top: top > containerHeight / 2 ? top : top,
       boxShadow: "#B5B5B5 1.5px 1.5px",
     }),
     [left, top]
   );
 
   // Memoize the color style for the gap div
-  const gapStyle = useMemo(
-    () => ({
-      backgroundColor: colorScale(gap),
-    }),
-    [colorScale, gap]
-  );
-
+  // const gapStyle = useMemo(
+  //   () => ({
+  //     backgroundColor: colorScale(gap),
+  //   }),
+  //   [colorScale, gap]
+  // );
 
   return (
     <div
@@ -53,27 +46,25 @@ const Tooltip = ({
       className="absolute desktop:min-w-[350px] z-[1000] pointer-events-none max-w-md min-w-[200px] bg-white rounded-sm overflow-hidden shadow-[0_1px_3px_0_rgba(0,0,0,0.1),0_1px_2px_-1px_rgba(0,0,0,0.1)] px-2 border-2 border-[#B5B5B5]"
     >
       <div className="px-4 py-2 border-b border-gray-200 ">
-        <h2 className="text-sm font-bold text-gray-800 text-center">
-          {county}, {state}
-        </h2>
+        <h2 className="text-sm font-bold text-gray-800 text-center">ABC</h2>
       </div>
       <div className="px-4 py-2 ">
         <div className="flex justify-between">
           <div className="text-center">
             <p className="text-sm text-gray-600 font-semibold">Gap</p>
             <div className="mt-1">
-              <div className="h-6 w-16" style={gapStyle}>
-                <p className="text-white text-lg font-bold leading-6">{gap}</p>
+              <div className="h-6 w-16">
+                <p className="text-white text-lg font-bold leading-6">DEF</p>
               </div>
             </div>
           </div>
           <div className="text-center text-gray-400">
             <p className="text-sm ">Worry</p>
-            <p className="text-xl p-0.5">{worry}</p>
+            <p className="text-xl p-0.5">GHI</p>
           </div>
           <div className="text-center text-gray-400">
             <p className="text-sm ">Rating</p>
-            <p className="text-xl p-0.5">{rating}</p>
+            <p className="text-xl p-0.5">JKL</p>
           </div>
         </div>
 
@@ -98,9 +89,11 @@ const Tooltip = ({
         )}
 
         {showScatterplotUXInfo && (
-            <p className="text-xs text-gray-400 font-thin flex items-center">
+          <p className="text-xs text-gray-400 font-thin flex items-center">
             <SquareDashedMousePointer />
-            <span className="ml-2">Click and hold to lasso multiple points</span>
+            <span className="ml-2">
+              Click and hold to lasso multiple points
+            </span>
           </p>
         )}
       </div>
