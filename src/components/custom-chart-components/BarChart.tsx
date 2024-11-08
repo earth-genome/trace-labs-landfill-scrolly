@@ -4,8 +4,7 @@ import textures from "textures";
 
 const Y_MAX = 191043.9235;
 const margin = { top: 20, right: 20, bottom: 30, left: 60 };
-const defaultColor = "hsla(60, 20%, 97%, 0.2)";
-const highlightColor = "rgba(121, 180, 173, .6)";
+
 const BarChart = ({
   data,
   width = 928,
@@ -14,6 +13,8 @@ const BarChart = ({
   yVariable,
   horizontal = false,
   fillCondition,
+  defaultColor,
+  highlightColor,
 }) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
 
@@ -183,10 +184,10 @@ const BarChart = ({
                   : innerHeight - yScale(d[yVariable]);
               })
               .attr("fill", (d) =>
-                fillCondition(d) ? "rgba(121, 180, 173, .5)" : defaultColor
+                fillCondition(d) ? highlightColor : defaultColor
               )
               .attr("stroke", (d) =>
-                fillCondition(d) ? "rgba(121, 180, 173, .5)" : defaultColor
+                fillCondition(d) ? highlightColor : defaultColor
               )
           ),
         (exit) =>

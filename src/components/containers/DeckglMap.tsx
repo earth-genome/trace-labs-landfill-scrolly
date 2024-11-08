@@ -48,6 +48,7 @@ const DeckglMap = memo(
     highlightColor = [121, 180, 173, 255],
     defaultColor = [121, 180, 173, 100],
     strokeColor = [57, 144, 153, 255],
+    radiusScale,
   }: {
     data: any; // Assuming GeoJSON type, adjust if necessary
     colorVariable: string;
@@ -60,26 +61,24 @@ const DeckglMap = memo(
     highlightColor: number[];
     defaultColor: number[];
     strokeColor: number[];
+    radiusScale: d3.ScaleSqrt<number, number>;
   }) => {
     const [viewState, setViewState] = useState(initialViewState);
 
-    const COLORS = {
-      RED: [255, 0, 0],
-      LIGHT_GRAY: [211, 211, 211],
-      BLACK: [234, 234, 234],
-      BROWN: [165, 42, 42],
-    } as const;
-
-    const getScatterplotConfig = useCallback((stepIndex, d) => {
-      const condition = STEP_CONDITIONS[stepIndex];
-      const isHighlighted = condition?.(d) ?? false;
-
-      return {
-        radius: isHighlighted ? 10 : 1,
-        fillColor: isHighlighted ? highlightColor : defaultColor,
-        lineWidth: isHighlighted ? 1 : 0,
-      };
-    }, []);
+    const getScatterplotConfig = useCallback(
+      (stepIndex, d, isHovered = false) => {
+        const condition = STEP_CONDITIONS[stepIndex];
+        const isHighlighted = condition?.(d) ?? false;
+        const baseRadius = isHighlighted ? radiusScale(d[xVariable]) : 1;
+    
+        return {
+          radius: isHovered ? baseRadius * 1.5 : baseRadius, // Increase radius by 50% on hover
+          fillColor: isHighlighted ? highlightColor : defaultColor,
+          lineWidth: isHovered ? 3 : 0,
+        };
+      },
+      [highlightColor, defaultColor, radiusScale, xVariable]
+    );
 
     const [hoverInfo, setHoverInfo] = useState<PickingInfo<DataType>>({});
 
@@ -122,7 +121,13 @@ const DeckglMap = memo(
             radiusUnits: "pixels",
             radiusMinPixels: 0.2,
             radiusMaxPixels: 200,
-            getRadius: (d) => getScatterplotConfig(currentStepIndex, d).radius,
+            getRadius: (d) => {
+              const isHovered = 
+                hoverInfo && 
+                hoverInfo.object && 
+                hoverInfo.object.asset_id === d.asset_id;
+              return getScatterplotConfig(currentStepIndex, d, isHovered).radius;
+            },
             getFillColor: (d) =>
               getScatterplotConfig(currentStepIndex, d).fillColor,
             lineWidthUnits: "pixels",
@@ -130,11 +135,17 @@ const DeckglMap = memo(
             lineWidthMinPixels: 0,
             lineWidthMaxPixels: 100,
             getLineColor: strokeColor,
-            getLineWidth: (d) =>
-              getScatterplotConfig(currentStepIndex, d).lineWidth,
+            getLineWidth: (d) => {
+              const isHovered =
+                hoverInfo &&
+                hoverInfo.object &&
+                hoverInfo.object.asset_id === d.asset_id;
+              return getScatterplotConfig(currentStepIndex, d, isHovered)
+                .lineWidth;
+            },
             transitions: {
               getRadius: {
-                duration: 1000,
+                duration: 100,
                 easing: d3.easeCubicInOut,
               },
               getFillColor: {
@@ -142,52 +153,33 @@ const DeckglMap = memo(
                 easing: d3.easeCubicInOut,
               },
               getLineWidth: {
-                duration: 1000,
+                duration: 100, // Faster transition for hover effect
                 easing: d3.easeCubicInOut,
               },
             },
             // Hover
             onHover: (info, event) => {
-              if (info.object) {
-                setHoverInfo(info);
-              } else {
-                setHoverInfo(null);
-              }
-              //If this callback returns a truthy value, the hover event is marked as handled and will not bubble up to the onHover callback of the DeckGL canvas.
+              setHoverInfo(info.object ? info : null);
               return true;
             },
             updateTriggers: {
-              getRadius: [currentStepIndex], // Tell deck.gl to re-evaluate when currentStepIndex changes
+              getRadius: [currentStepIndex, hoverInfo],  // Add hoverInfo as trigger
               getFillColor: [currentStepIndex],
-              getLineWidth: [currentStepIndex],
+              getLineWidth: [currentStepIndex, hoverInfo],
             },
             pickable: true,
           }),
         ].filter(Boolean),
-      [data, currentStepIndex, getScatterplotConfig]
+      [
+        data,
+        currentStepIndex,
+        getScatterplotConfig,
+        highlightColor,
+        defaultColor,
+        hoverInfo,
+      ] // Add hoverInfo dependency
     );
 
-    // const hoverLayer = useMemo(() => {
-    //   if (!hoverInfo || !hoverInfo.object) return null;
-    //   return new GeoJsonLayer({
-    //     id: "hover-layer",
-    //     data: [hoverInfo.object],
-    //     pickable: false,
-    //     stroked: true,
-    //     filled: true,
-    //     getFillColor: (d) => {
-    //       // const { r, g, b } = d3.color(colorScale(d.properties[colorVariable]));
-    //       const a = 255;
-    //       return [234, 234, 234, a];
-    //     },
-    //     lineWidthUnits: "pixels",
-    //     lineWidthScale: 1,
-    //     lineWidthMinPixels: 2,
-    //     lineWidthMaxPixels: 10,
-    //     getLineColor: [255, 255, 255, 255],
-    //     getLineWidth: 2,
-    //   });
-    // }, [hoverInfo]);
 
     useEffect(() => {
       if (currentStepIndex === 1) {
@@ -247,6 +239,8 @@ const DeckglMap = memo(
             <Tooltip
               left={hoverInfo.x + 10}
               top={hoverInfo.y + 10}
+              tooltipData={hoverInfo.object}
+              formatter={d3.format(".2s")}
               showMapUXInfo={true}
               containerWidth={width}
               containerHeight={height}

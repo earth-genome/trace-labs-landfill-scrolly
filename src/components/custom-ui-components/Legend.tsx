@@ -6,7 +6,7 @@ const LegendValues = [
   { value: 18350, size: 8 },
 ];
 
-const EmissionLegend = () => {
+const EmissionLegend = ({ highlightColor }: { highlightColor: string }) => {
   return (
     <div
       id="legend"
@@ -19,7 +19,10 @@ const EmissionLegend = () => {
         </p>
         {/* <!-- Color legend --> */}
         <div className="flex items-center space-x-2 mt-2">
-          <span className="w-3 h-3 bg-[#79B4AD] rounded-full"></span>
+          <span
+            className="w-3 h-3  rounded-full"
+            style={{ backgroundColor: highlightColor }}
+          ></span>
           <p className="text-gray-600">Top100</p>
         </div>
         <div className="flex items-center space-x-2">

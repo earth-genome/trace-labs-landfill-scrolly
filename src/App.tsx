@@ -68,8 +68,31 @@ SORTED_DATA.forEach((d, i) => {
   d.top100InMexico = top100MexicoIds.has(d.asset_id);
   d.top100InAnnex = top100AnnexIds.has(d.asset_id);
 });
-const TotalNumberOfBars = 300;
+const TotalNumberOfBars = 200;
 const filteredData = SORTED_DATA.slice(0, TotalNumberOfBars);
+const radiusScale = d3.scaleSqrt().domain(d3.extent(SORTED_DATA, d => +d[X_VARIABLE])).range([1, 20]);
+
+// Color related
+const defaultColor = "hsla(68, 42%, 41%, 0.1)";
+const highlightColor = "hsla(68, 73%, 48%, .8)";
+const strokeColor = "hsla(69, 20%, 27%, 1.0)";
+function hslaToRGBA(hslaString) {
+  // Create a temporary div to use the browser's color conversion
+  const div = document.createElement('div');
+  div.style.color = hslaString;
+  document.body.appendChild(div);
+  
+  // Get the computed RGB values
+  const rgbaColor = window.getComputedStyle(div).color;
+  document.body.removeChild(div);
+  
+  // Extract RGBA values (converting alpha to 0-255 range)
+  const [r, g, b, a] = rgbaColor.match(/[\d.]+/g).map(Number);
+  return [r, g, b, Math.round(a * 255)];
+}
+
+
+
 function App() {
   const { parentRef } = useParentSize();
   const [sliderValue, setSliderValue] = useState([33]);
@@ -122,6 +145,10 @@ function App() {
                       height={height}
                       currentStepIndex={currentStepIndex}
                       STEP_CONDITIONS={STEP_CONDITIONS}
+                      highlightColor={hslaToRGBA(highlightColor)}
+                      defaultColor={hslaToRGBA(defaultColor)}
+                      strokeColor={hslaToRGBA(strokeColor)}
+                      radiusScale={radiusScale}
                     />
                   );
                 }}
@@ -143,6 +170,8 @@ function App() {
                         fillCondition={STEP_CONDITIONS[currentStepIndex]}
                         xVariable={Y_VARIABLE}
                         yVariable={X_VARIABLE}
+                        defaultColor={defaultColor}
+                        highlightColor={highlightColor}
                       />
                     )}
                   </ParentSize>
@@ -150,7 +179,7 @@ function App() {
               </figure>
             </div>
             <div style={{ display: currentStepIndex == 0 ? "none" : "block" }}>
-              <Legend />
+              <Legend highlightColor={(highlightColor)}/>
             </div>
           </div>
 
