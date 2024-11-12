@@ -68,30 +68,32 @@ SORTED_DATA.forEach((d, i) => {
   d.top100InMexico = top100MexicoIds.has(d.asset_id);
   d.top100InAnnex = top100AnnexIds.has(d.asset_id);
 });
+
 const TotalNumberOfBars = 200;
 const filteredData = SORTED_DATA.slice(0, TotalNumberOfBars);
-const radiusScale = d3.scaleSqrt().domain(d3.extent(SORTED_DATA, d => +d[X_VARIABLE])).range([1, 20]);
+const radiusScale = d3
+  .scaleSqrt()
+  .domain(d3.extent(SORTED_DATA, (d) => +d[X_VARIABLE]))
+  .range([1, 20]);
 
 // Color related
-const defaultColor = "hsla(68, 42%, 41%, 0.1)";
-const highlightColor = "hsla(68, 73%, 48%, .8)";
-const strokeColor = "hsla(69, 20%, 27%, 1.0)";
+const defaultColor = "hsla(186, 45%, 42%, 0.9)";
+const highlightColor = "hsla(216, 30%, 24%, 0.8)";
+const strokeColor = "hsla(355, 100%, 100%, 1.0)";
 function hslaToRGBA(hslaString) {
   // Create a temporary div to use the browser's color conversion
-  const div = document.createElement('div');
+  const div = document.createElement("div");
   div.style.color = hslaString;
   document.body.appendChild(div);
-  
+
   // Get the computed RGB values
   const rgbaColor = window.getComputedStyle(div).color;
   document.body.removeChild(div);
-  
+
   // Extract RGBA values (converting alpha to 0-255 range)
   const [r, g, b, a] = rgbaColor.match(/[\d.]+/g).map(Number);
   return [r, g, b, Math.round(a * 255)];
 }
-
-
 
 function App() {
   const { parentRef } = useParentSize();
@@ -109,6 +111,16 @@ function App() {
     <div className=" relative ">
       <main className="flex flex-col ">
         <div className=" relative ">
+          <div className="h-screen">
+            What if we could cap 100 Landfills? Let’s imagine the funds and
+            political will have come together amongst the UN’s Annex I
+            (historically industrialized) nations to cap 100 landfills. Climate
+            TRACE uses AI to track and characterize 9,624 landfills worldwide.
+            The Annex I nations have recognized the potential to cut
+            planet-heating emissions and are evaluating options for how to best
+            prioritize this group of nearly 1% of all landfills tracked by
+            Climate TRACE.
+          </div>
           {/* NOTE: Sticky Map Container */}
           <div className="sticky w-full h-screen top-0 overflow-hidden flex flex-col items-center justify-center z-[100]">
             {/* I'm sticky. The current triggered step index is: {currentStepIndex} */}
@@ -132,12 +144,20 @@ function App() {
             >
               {STEP_METADATA[currentStepIndex]?.label}
             </h2>
-            <figure ref={parentRef} className="w-full h-full z-50">
+            <figure
+              ref={parentRef}
+              className="w-4/5 h-4/5 z-50 overflow-hidden absolute right-0 top-0"
+            >
               <ParentSize>
                 {({ width, height }) => {
                   return (
                     <DeckglMap
-                      data={SORTED_DATA}
+                      data={SORTED_DATA.slice().sort((a, b) =>
+                        d3.ascending(
+                          a.emissions_quantity_avoided,
+                          b.emissions_quantity_avoided
+                        )
+                      )}
                       colorVariable={COLOR_VARIABLE}
                       xVariable={X_VARIABLE}
                       yVariable={Y_VARIABLE}
@@ -159,7 +179,7 @@ function App() {
               style={{ display: currentStepIndex == 0 ? "none" : "flex" }}
               className="h-[400px] w-full absolute bottom-0 left-0 justify-center items-center"
             >
-              <figure className="h-full w-4/5 bg-[hsla(195, 10%, 100%, 0.582)] box-shadow-[0_0_10px_0_rgba(0,0,0,0.1)] rounded-md z-[50]">
+              <figure className="h-full w-full bg-[hsla(195, 10%, 100%, 0.582)] box-shadow-[0_0_10px_0_rgba(0,0,0,0.1)] rounded-md z-[50]">
                 {currentStepIndex !== 0 && (
                   <ParentSize>
                     {({ width, height }) => (
@@ -179,7 +199,7 @@ function App() {
               </figure>
             </div>
             <div style={{ display: currentStepIndex == 0 ? "none" : "block" }}>
-              <Legend highlightColor={(highlightColor)}/>
+              <Legend highlightColor={highlightColor} />
             </div>
           </div>
 

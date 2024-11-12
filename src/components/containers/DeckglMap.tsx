@@ -31,7 +31,7 @@ const elevationScale = d3.scaleLinear().domain([-1, 1]).range([0, 2000]);
 const initialViewState = {
   longitude: 0,
   latitude: 0,
-  zoom: 1.5,
+  zoom:1.8,
   pitch: 0,
   bearing: 0,
 };
@@ -70,7 +70,7 @@ const DeckglMap = memo(
         const condition = STEP_CONDITIONS[stepIndex];
         const isHighlighted = condition?.(d) ?? false;
         const baseRadius = isHighlighted ? radiusScale(d[xVariable]) : 1;
-    
+
         return {
           radius: isHovered ? baseRadius * 1.5 : baseRadius, // Increase radius by 50% on hover
           fillColor: isHighlighted ? highlightColor : defaultColor,
@@ -88,7 +88,7 @@ const DeckglMap = memo(
           new GeoJsonLayer({
             id: "world-layer",
             data: worldGEOJSON,
-            getFillColor: [231, 242, 206, 12],
+            getFillColor: [231, 242, 206, 200],
             wireframe: true,
             pickable: true,
             autoHighlight: false,
@@ -110,7 +110,7 @@ const DeckglMap = memo(
             },
             lineWidthUnits: "pixels",
             lineWidthScale: 1,
-            lineWidthMinPixels: 0.1,
+            lineWidthMinPixels: .25,
             lineWidthMaxPixels: 100,
           }),
           new ScatterplotLayer({
@@ -122,11 +122,12 @@ const DeckglMap = memo(
             radiusMinPixels: 0.2,
             radiusMaxPixels: 200,
             getRadius: (d) => {
-              const isHovered = 
-                hoverInfo && 
-                hoverInfo.object && 
+              const isHovered =
+                hoverInfo &&
+                hoverInfo.object &&
                 hoverInfo.object.asset_id === d.asset_id;
-              return getScatterplotConfig(currentStepIndex, d, isHovered).radius;
+              return getScatterplotConfig(currentStepIndex, d, isHovered)
+                .radius;
             },
             getFillColor: (d) =>
               getScatterplotConfig(currentStepIndex, d).fillColor,
@@ -163,7 +164,7 @@ const DeckglMap = memo(
               return true;
             },
             updateTriggers: {
-              getRadius: [currentStepIndex, hoverInfo],  // Add hoverInfo as trigger
+              getRadius: [currentStepIndex, hoverInfo], // Add hoverInfo as trigger
               getFillColor: [currentStepIndex],
               getLineWidth: [currentStepIndex, hoverInfo],
             },
@@ -179,7 +180,6 @@ const DeckglMap = memo(
         hoverInfo,
       ] // Add hoverInfo dependency
     );
-
 
     useEffect(() => {
       if (currentStepIndex === 1) {
@@ -228,13 +228,13 @@ const DeckglMap = memo(
           }}
           layers={[...layers].filter(Boolean)}
         >
-          <Map
+          {/* <Map
             className="absolute top-0 left-0 w-full h-full"
             reuseMaps
             mapStyle={
               "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
             }
-          />
+          /> */}
           {hoverInfo && hoverInfo.object && (
             <Tooltip
               left={hoverInfo.x + 10}
