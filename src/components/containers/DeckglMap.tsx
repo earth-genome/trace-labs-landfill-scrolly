@@ -30,8 +30,8 @@ const elevationScale = d3.scaleLinear().domain([-1, 1]).range([0, 2000]);
 
 const initialViewState = {
   longitude: 0,
-  latitude: 0,
-  zoom:1.8,
+  latitude: 30,
+  zoom: 1.8,
   pitch: 0,
   bearing: 0,
 };
@@ -82,35 +82,66 @@ const DeckglMap = memo(
 
     const [hoverInfo, setHoverInfo] = useState<PickingInfo<DataType>>({});
 
+    const annexCountries = useMemo(
+      () =>
+        Array.from(
+          new Set(data.filter((d) => d.annexOrNot).map((d) => d.iso3_country))
+        ),
+      [data]
+    );
     const layers = useMemo(
       () =>
         [
           new GeoJsonLayer({
             id: "world-layer",
-            data: worldGEOJSON,
-            getFillColor: [231, 242, 206, 200],
-            wireframe: true,
-            pickable: true,
-            autoHighlight: false,
-            stroked: true,
-            getLineColor: (d) => {
-              if (currentStepIndex === 1 && d.properties.iso_a3_eh === "MEX") {
-                return [0, 0, 0, 255];
+            data: worldGEOJSON.features.filter(
+              (f) => f.properties.continent !== "Antarctica"
+            ),
+            getFillColor: (d) => {
+              if (currentStepIndex === 0) {
+                return [234, 234, 234, 30];
+              } else if (currentStepIndex === 1) {
+                return annexCountries.includes(d.properties.iso_a3_eh)
+                  ?  [234, 234, 234, 130]
+                  : [234, 234, 234, 30];
               } else {
-                return [0, 0, 0, 255];
+                return [234, 234, 234, 30];
               }
             },
-
-            getLineWidth: (d) => {
-              if (currentStepIndex === 1 && d.properties.iso_a3_eh == "MEX") {
-                return 4;
+            getLineWidth:(d) => {
+              if (currentStepIndex === 0) {
+                return 0
+              } else if (currentStepIndex === 1) {
+                return annexCountries.includes(d.properties.iso_a3_eh)
+                  ? 3
+                  : 0;
               } else {
                 return 0;
               }
             },
+            transitions: {
+              getFillColor: {
+                duration: 1000,
+                easing: d3.easeCubicInOut,
+              },
+              getLineWidth: {
+                duration: 1000,
+                easing: d3.easeCubicInOut,
+              },
+            },
+            updateTriggers: {
+              getFillColor: [currentStepIndex],
+              getLineWidth: [currentStepIndex],
+            },
+            wireframe: true,
+            pickable: true,
+            autoHighlight: false,
+            stroked: true,
+            getLineColor: [0, 0, 0, 255],
+       
             lineWidthUnits: "pixels",
             lineWidthScale: 1,
-            lineWidthMinPixels: .25,
+            lineWidthMinPixels: 0.25,
             lineWidthMaxPixels: 100,
           }),
           new ScatterplotLayer({
@@ -182,11 +213,11 @@ const DeckglMap = memo(
     );
 
     useEffect(() => {
-      if (currentStepIndex === 1) {
+      if (currentStepIndex >= 3) {
         setViewState({
-          longitude: -102.5528,
-          latitude: 23.6345,
-          zoom: 5,
+          longitude: -94.499126,
+          latitude: 29.565815,
+          zoom: 1.2,
           transitionInterpolator: new FlyToInterpolator({
             speed: 0.6,
             curve: 1.2,

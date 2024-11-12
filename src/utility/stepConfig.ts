@@ -2,16 +2,34 @@ import { useMemo } from "react";
 
 // Optional: Add metadata for each step if needed
 export const STEP_METADATA = {
-  0: { label: "All Plants", text: "..." },
-  1: { label: "Mexican Top 100 Plants", text: "..." },
-  2: { label: "Annexed Top 100 Plants", text: "..." },
-  3: { label: "All Top 100 Plants", text: "..." },
+  0: {
+    label: "Pete Step 1",
+    text: `Start with a "clean" map = all countries in white background, all landfills have small grey dots.`,
+  },
+  1: {
+    label: "Pete Step 2",
+    text: " Next animation: highlight via solid fill color shading all Annex I countries.",
+  },
+  2: {
+    label: "Pete Step 3",
+    text: "Next animation: fade off the Annex I color, and now fade in the enlarged green circles for the 100 landfills of scenario 1.",
+  },
+  3: {
+    label: "Pete Step 4",
+    text: "Next animation: add the histogram chart of scenario 1",
+  },
+  4: {
+    label: "Pete Step 5",
+    text: "Next animation: transition = fade out Annex I landfills not included in scenario 2, while fading in enlarged green circles of the landfills now included in the scope of the global emissionality approach. Histogram chart should also transition to scenario 2 coloring / results.",
+  },
 } as const;
 
 export const STEP_CONDITIONS = {
-  1: (d: any) => d?.top100InMexico === true,
+  1: (d: any) => false,
   2: (d: any) => d?.top100InAnnex === true,
-  3: (d: any) => d?.top100OrNot === true,
+  3: (d: any) => d?.top100InAnnex === true,
+  4: (d: any) => d?.top100OrNot === true,
+  
 } as const;
 
 export const useStepFilteredData = (data: any[], stepIndex: number) => {

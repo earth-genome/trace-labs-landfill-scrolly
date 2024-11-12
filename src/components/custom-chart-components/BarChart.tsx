@@ -1,11 +1,22 @@
 import React, { useRef, useEffect, useMemo } from "react";
 import * as d3 from "d3";
-import textures from "textures";
 
 const Y_MAX = 191043.9235;
 const margin = { top: 20, right: 20, bottom: 30, left: 60 };
 
-const BarChart = ({
+interface BarChartProps {
+  data: any[];
+  width?: number;
+  height?: number;
+  xVariable: string;
+  yVariable: string;
+  horizontal?: boolean;
+  fillCondition?: (d: any) => boolean;
+  defaultColor?: string;
+  highlightColor?: string;
+}
+
+const BarChart: React.FC<BarChartProps> = ({
   data,
   width = 928,
   height = 500,
@@ -13,22 +24,29 @@ const BarChart = ({
   yVariable,
   horizontal = false,
   fillCondition,
-  defaultColor,
-  highlightColor,
+  defaultColor = "steelblue",
+  highlightColor = "orange",
 }) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
 
   // Define inner dimensions
-  const innerWidth = useMemo(() => width - margin.left - margin.right, [width]);
+  const innerWidth = useMemo(
+    () => Math.max(250, width - margin.left - margin.right),
+    [width]
+  );
   const innerHeight = useMemo(
-    () => Math.max(350, height - margin.top - margin.bottom),
+    () => Math.max(250, height - margin.top - margin.bottom),
     [height]
   );
 
   // Scales
   const xScale = useMemo(() => {
     return horizontal
-      ? d3.scaleLinear().domain([0, Y_MAX]).nice().range([0, innerWidth])
+      ? d3
+          .scaleLinear()
+          .domain([0, d3.max(data, (d) => d[xVariable]) ?? 0])
+          .nice()
+          .range([0, innerWidth])
       : d3
           .scaleBand()
           .domain(data.map((d) => d[xVariable]))
@@ -43,21 +61,18 @@ const BarChart = ({
           .domain(data.map((d) => d[yVariable]))
           .range([0, innerHeight])
           .padding(0.1)
-      : d3.scaleLinear().domain([0, Y_MAX]).nice().range([innerHeight, 0]);
+      : d3
+          .scaleLinear()
+          .domain([0, d3.max(data, (d) => d[yVariable]) ?? 0])
+          .nice()
+          .range([innerHeight, 0]);
   }, [data, yVariable, innerHeight, horizontal]);
 
   useEffect(() => {
     if (!svgRef.current) return;
 
     const svg = d3.select(svgRef.current);
-    // const t = textures
-    //   .lines()
-    //   .orientation("horizontal")
-    //   .strokeWidth(1)
-    //   .shapeRendering("crispEdges")
-    //   .stroke("white");
 
-    // svg.call(t);
     // Create container group
     const chartGroup = svg
       .selectAll(".chart-group")
@@ -66,7 +81,6 @@ const BarChart = ({
       .attr("class", "chart-group")
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    // NOTE: Axes
     // Axes
     const xAxis = horizontal
       ? d3.axisBottom(xScale).tickSize(0).tickValues([])
@@ -74,8 +88,7 @@ const BarChart = ({
 
     const yAxis = horizontal
       ? d3.axisLeft(yScale).tickSize(0).tickValues([])
-      : d3.axisLeft(yScale).tickSize(0).tickValues(yScale.ticks(5));
-      // .tickSize(-innerWidth).tickValues(yScale.ticks(10));
+      : d3.axisLeft(yScale).tickSize(0).tickValues(yScale.ticks(2));
 
     svg
       .selectAll(".x-axis")
@@ -86,10 +99,7 @@ const BarChart = ({
         "transform",
         `translate(${margin.left},${margin.top + innerHeight})`
       )
-      .transition()
-      .duration(500)
       .call(xAxis)
-      // .call((g) => (horizontal ? g.select(".domain").remove() : g)); // Remove domain only when horizontal
       .call((g) => (horizontal ? g.select(".domain").remove() : g));
     svg
       .selectAll(".y-axis")
@@ -97,40 +107,35 @@ const BarChart = ({
       .join("g")
       .attr("class", "y-axis")
       .attr("transform", `translate(${margin.left},${margin.top})`)
-      .transition()
-      .duration(500)
       .call(yAxis);
+
     // Remove domain lines
     svg.select(".x-axis").select(".domain").remove();
     svg.select(".y-axis").select(".domain").remove();
 
-    // Style gridlines when not horizontal
-    // if (!horizontal) {
-    //   svg
-    //     .select(".y-axis")
-    //     .selectAll(".tick line")
-    //     .attr("stroke", "white")
-    //     .attr("stroke-width", 1)
-    //     .attr("stroke-dasharray", "2,2");
-    // }
     // Bars
     chartGroup
       .selectAll(".bar")
-      .data(data, (d) => d.asset_id)
+      .data(data, (d: any) => d[yVariable])
       .join(
         (enter) =>
           enter
             .append("rect")
             .attr("class", "bar")
-            // .attr("fill", t.url())
-            // .attr("fill", "rgba(121, 180, 173, .5)")
             .attr("fill", (d) =>
-              fillCondition(d) ? highlightColor : defaultColor
+              fillCondition
+                ? fillCondition(d)
+                  ? highlightColor
+                  : defaultColor
+                : defaultColor
             )
             .attr("stroke", (d) =>
-              fillCondition(d) ? highlightColor : defaultColor
+              fillCondition
+                ? fillCondition(d)
+                  ? highlightColor
+                  : defaultColor
+                : defaultColor
             )
-
             // Initial position and size of entering bars
             .attr("x", (d) => (horizontal ? 0 : xScale(d[xVariable]) ?? 0))
             .attr("y", (d) =>
@@ -157,12 +162,6 @@ const BarChart = ({
                     ? yScale.bandwidth()
                     : innerHeight - yScale(d[yVariable]);
                 })
-                .attr("fill", (d) =>
-                  fillCondition(d) ? highlightColor : defaultColor
-                )
-                .attr("stroke", (d) =>
-                  fillCondition(d) ? highlightColor : defaultColor
-                )
             ),
         (update) =>
           update.call((update) =>
@@ -184,10 +183,18 @@ const BarChart = ({
                   : innerHeight - yScale(d[yVariable]);
               })
               .attr("fill", (d) =>
-                fillCondition(d) ? highlightColor : defaultColor
+                fillCondition
+                  ? fillCondition(d)
+                    ? highlightColor
+                    : defaultColor
+                  : defaultColor
               )
               .attr("stroke", (d) =>
-                fillCondition(d) ? highlightColor : defaultColor
+                fillCondition
+                  ? fillCondition(d)
+                    ? highlightColor
+                    : defaultColor
+                  : defaultColor
               )
           ),
         (exit) =>
@@ -204,12 +211,13 @@ const BarChart = ({
     xScale,
     yScale,
     innerHeight,
-    innerWidth,
     margin,
     horizontal,
     xVariable,
     yVariable,
     fillCondition,
+    defaultColor,
+    highlightColor,
   ]);
 
   return <svg ref={svgRef} width={width} height={height}></svg>;

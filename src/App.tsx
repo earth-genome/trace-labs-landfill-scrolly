@@ -11,7 +11,7 @@ import { Scrollama, Step } from "react-scrollama";
 
 // import steelplant from "@/data/steel-plant.csv";
 import data from "@/data/data.csv";
-import stackedBarChartData from "@/data/stackedBarChart.csv";
+// import stackedBarChartData from "@/data/stackedBarChart.csv";
 // NOTE: config + static data
 import {
   STEP_CONDITIONS,
@@ -21,8 +21,9 @@ import {
 } from "@/utility/stepConfig";
 // NOTE: Custom UI components
 import Legend from "@/components/custom-ui-components/Legend";
+import VisibleTextBlock from "@/components/custom-ui-components/VisibleTextBlock";
 // NOTE: Reusable UI components
-import { Slider } from "@/components/reusable-ui-components/slider";
+// import { Slider } from "@/components/reusable-ui-components/slider";
 
 // NOTE: Big Container components
 import DeckglMap from "./components/containers/DeckglMap";
@@ -77,8 +78,8 @@ const radiusScale = d3
   .range([1, 20]);
 
 // Color related
-const defaultColor = "hsla(186, 45%, 42%, 0.9)";
-const highlightColor = "hsla(216, 30%, 24%, 0.8)";
+const defaultColor = "hsla(0, 0%, 78%, 1.0)";
+const highlightColor = "hsla(0, 0%, 31%, 1.0)";
 const strokeColor = "hsla(355, 100%, 100%, 1.0)";
 function hslaToRGBA(hslaString) {
   // Create a temporary div to use the browser's color conversion
@@ -107,22 +108,29 @@ function App() {
     setCurrentStepIndex(data);
   };
 
+  console.log(filteredData);
   return (
     <div className=" relative ">
+      <header className="h-screen  ">
+        <h1 className="font-black max-w-[650px] text-[3rem] m-auto leading-[1.1]">
+          Accelerating global decarbonization through emissionality: an example
+          from reducing landfill methane emissions
+        </h1>
+        <p className="max-w-[650px] m-auto">
+          What if we could cap 100 Landfills? Let’s imagine the funds and
+          political will have come together amongst the UN’s Annex I
+          (historically industrialized) nations to cap 100 landfills. Climate
+          TRACE uses AI to track and characterize 9,624 landfills worldwide. The
+          Annex I nations have recognized the potential to cut planet-heating
+          emissions and are evaluating options for how to best prioritize this
+          group of nearly 1% of all landfills tracked by Climate TRACE.
+        </p>
+      </header>
       <main className="flex flex-col ">
         <div className=" relative ">
-          <div className="h-screen">
-            What if we could cap 100 Landfills? Let’s imagine the funds and
-            political will have come together amongst the UN’s Annex I
-            (historically industrialized) nations to cap 100 landfills. Climate
-            TRACE uses AI to track and characterize 9,624 landfills worldwide.
-            The Annex I nations have recognized the potential to cut
-            planet-heating emissions and are evaluating options for how to best
-            prioritize this group of nearly 1% of all landfills tracked by
-            Climate TRACE.
-          </div>
+          {/* sticky content starts */}
           {/* NOTE: Sticky Map Container */}
-          <div className="sticky w-full h-screen top-0 overflow-hidden flex flex-col items-center justify-center z-[100]">
+          <div className="sticky w-full h-screen top-0 overflow-hidden flex flex-col items-center justify-center ">
             {/* I'm sticky. The current triggered step index is: {currentStepIndex} */}
             {/* <Slider
                 className="w-full"
@@ -132,21 +140,35 @@ function App() {
                 onValueChange={(value) => setSliderValue(value)}
               /> */}
 
-            <h1
-              className=" text-lg font-semibold opacity-40"
-              style={{ display: currentStepIndex == 0 ? "none" : "block" }}
-            >
-              Methane Matters
-            </h1>
+            {currentStepIndex > 2 && (
+              <>
+                <section className="absolute top-0 left-[2%] max-w-[34vw]">
+                  <h1 className=" text-3xl font-thin opacity-40 mb-8">
+                    Methane Matters
+                  </h1>
+                  <VisibleTextBlock currentStepIndex={currentStepIndex} />
+                  <h2 className="text-[2rem] font-bold">BIG NUMBER</h2>
+
+                  <div>
+                    <Legend
+                      highlightColor={highlightColor}
+                      defaultColor={defaultColor}
+                    />
+                  </div>
+                </section>
+              </>
+            )}
+
+            {/* 
             <h2
               className="z-[100] mt-4 text-xl font-semibold"
               style={{ display: currentStepIndex == 0 ? "none" : "block" }}
             >
               {STEP_METADATA[currentStepIndex]?.label}
-            </h2>
+            </h2> */}
             <figure
               ref={parentRef}
-              className="w-4/5 h-4/5 z-50 overflow-hidden absolute right-0 top-0"
+              className="w-full h-full z-[0] overflow-hidden absolute right-0 top-0"
             >
               <ParentSize>
                 {({ width, height }) => {
@@ -176,8 +198,8 @@ function App() {
             </figure>
             {/* NOTE: Bottom Bar Chart Container */}
             <div
-              style={{ display: currentStepIndex == 0 ? "none" : "flex" }}
-              className="h-[400px] w-full absolute bottom-0 left-0 justify-center items-center"
+              style={{ display: currentStepIndex >= 3 ? "flex" : "none" }}
+              className="h-[300px] w-full absolute bottom-0 left-0 justify-center items-center"
             >
               <figure className="h-full w-full bg-[hsla(195, 10%, 100%, 0.582)] box-shadow-[0_0_10px_0_rgba(0,0,0,0.1)] rounded-md z-[50]">
                 {currentStepIndex !== 0 && (
@@ -198,22 +220,19 @@ function App() {
                 )}
               </figure>
             </div>
-            <div style={{ display: currentStepIndex == 0 ? "none" : "block" }}>
-              <Legend highlightColor={highlightColor} />
-            </div>
           </div>
 
-          {/* NOTE: Steps Container */}
-
+          {/* sticky content ends */}
+          {/* NOTE: Steps Container: flowing text */}
           <div className="relative z-10 mt-[-100vh] w-full ">
             <Scrollama offset={0.4} onStepEnter={onStepEnter}>
-              {[1, 2, 3, 4].map((_, stepIndex) => (
+              {[1, 2, 3, 4, 5].map((_, stepIndex) => (
                 <Step data={stepIndex} key={stepIndex}>
                   <div
                     style={{
                       paddingTop: `${stepIndex == 0 ? "10vh" : "0vh"}`,
                       paddingBottom: "110vh",
-                      opacity: stepIndex == 0 ? 1 : 0,
+                      opacity: stepIndex < 3 ? 1 : 0,
                     }}
                     id="g-header-container"
                     className="w-full  justify-center items-center "
@@ -222,25 +241,22 @@ function App() {
                       id="interactive-header"
                       className="h-[800px] w-4/5 flex flex-col justify-center items-center"
                     >
-                      <h1
+                      {/* <h1
                         id="interactive-heading"
                         data-testid="headline"
                         className="text-[3rem] font-semibold tracking-widest"
                       >
                         Methane Matters
-                      </h1>
+                      </h1> */}
                       <h2 className="text-[#42959D] text-[2rem]">
-                        The Optimal Way to Reduce Landfill Emissions
+                        {STEP_METADATA[stepIndex]?.label}
                       </h2>
                       <p
                         id="interactive-leadin"
                         data-testid="interactive-leadin"
                         className="text-lg"
                       >
-                        What is this tool...Lorem ipsum dolor sit amet,
-                        consectetur adipiscing elit. Vestibulum fermentum, nibh
-                        et posuere posuere, nisi velit accumsan libero, vitae
-                        luctus justo mi a est.
+                        {STEP_METADATA[stepIndex]?.text}
                       </p>
                     </header>
                   </div>
@@ -250,37 +266,43 @@ function App() {
           </div>
         </div>
 
-        <section className="h-screen w-screen bg-[#D4DADC] pt-[10vh] flex flex-col justify-center items-center">
-          <h1 className="text-[3rem] font-semibold tracking-widest">
-            Methane Matters
-          </h1>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed auctor
-            vel tellus id placerat. Aliquam erat volutpat. Lorem ipsum dolor sit
-            amet, consectetur adipiscing elit. Sed auctor vel tellus id
-            placerat. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Sed auctor vel tellus id placerat. Aliquam erat volutpat. Lorem
-            ipsum dolor sit amet, consectetur adipiscing elit. Sed auctor vel
-            tellus id placerat.{" "}
-          </p>
-          <div className="flex-grow w-2/3 flex justify-center items-center">
-            {top100Conditions.map((d, i) => (
-              <figure className="size-1/3">
+        <section className="h-screen w-screen bg-[#D4DADC] pt-[10vh] flex flex-col justify-center items-center ">
+          <div className="max-w-[650px] m-auto">
+            <h1 className="text-[3rem] font-semibold tracking-widest">
+              Optimizing for Impact
+            </h1>
+            <p>
+              These scenarios demonstrate that effective climate action is best
+              served by letting go of geographic constraints and prioritizing
+              impact above all. When we look beyond national boundaries and
+              directly optimize for the highest emissions reduction potential,
+              we can significantly amplify our impact. The data is clear:
+              focusing globally and making decisions based purely on potential
+              emissions reduction, rather than political considerations, yields
+              the greatest climate benefit.
+            </p>
+            <div className="flex-grow w-2/3 flex justify-center items-center">
+              {/* {top100Conditions.map((d, i) => ( */}
+              <figure className="size-[300px]">
                 <ParentSize>
-                  {({ width, height }) => {
-                    return (
-                      <PieChart
-                        key={i}
-                        data={d}
-                        width={width}
-                        height={height}
-                        colors={["#42959D", "#42959D", "#42959D", "#42959D"]}
-                      />
-                    );
-                  }}
+                  {({ width, height }) => (
+                     <BarChart
+                     width={width}
+                     height={height}
+                     data={[
+                       { asset_id: "Global", emissions_quantity_avoided: 100 },
+                       { asset_id: "Annex 1", emissions_quantity_avoided: 50 },
+                     ]}
+                     xVariable="emissions_quantity_avoided"
+                     yVariable="asset_id"
+                     horizontal={true}
+                     defaultColor="hsla(0, 0%, 78%, 1.0)"
+                   />
+                  )}
                 </ParentSize>
               </figure>
-            ))}
+              {/* ))} */}
+            </div>
           </div>
         </section>
       </main>
