@@ -69,8 +69,8 @@ const DeckglMap = memo(
       (stepIndex, d, isHovered = false) => {
         const condition = STEP_CONDITIONS[stepIndex];
         const isHighlighted = condition?.(d) ?? false;
-        const baseRadius = isHighlighted ? radiusScale(d[xVariable]) : 1;
-
+        // const baseRadius = isHighlighted ? radiusScale(d[xVariable]) : 1;
+        const baseRadius = radiusScale(d[xVariable]);
         return {
           radius: isHovered ? baseRadius * 1.5 : baseRadius, // Increase radius by 50% on hover
           fillColor: isHighlighted ? highlightColor : defaultColor,
@@ -102,19 +102,17 @@ const DeckglMap = memo(
                 return [234, 234, 234, 30];
               } else if (currentStepIndex === 1) {
                 return annexCountries.includes(d.properties.iso_a3_eh)
-                  ?  [234, 234, 234, 130]
+                  ? [234, 234, 234, 130]
                   : [234, 234, 234, 30];
               } else {
                 return [234, 234, 234, 30];
               }
             },
-            getLineWidth:(d) => {
+            getLineWidth: (d) => {
               if (currentStepIndex === 0) {
-                return 0
+                return 0;
               } else if (currentStepIndex === 1) {
-                return annexCountries.includes(d.properties.iso_a3_eh)
-                  ? 3
-                  : 0;
+                return annexCountries.includes(d.properties.iso_a3_eh) ? 3 : 0;
               } else {
                 return 0;
               }
@@ -138,7 +136,7 @@ const DeckglMap = memo(
             autoHighlight: false,
             stroked: true,
             getLineColor: [0, 0, 0, 255],
-       
+
             lineWidthUnits: "pixels",
             lineWidthScale: 1,
             lineWidthMinPixels: 0.25,

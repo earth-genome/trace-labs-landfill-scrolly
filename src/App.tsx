@@ -38,11 +38,12 @@ const COLOR_VARIABLE = "gap";
 const topNumber = 100;
 const SORT_VARIABLE = "emissions_quantity_avoided";
 const SORTED_DATA = data.sort((a, b) => +b[SORT_VARIABLE] - +a[SORT_VARIABLE]);
-const top100MexicoIds = new Set(
-  SORTED_DATA.filter((d) => d.iso3_country === "MEX")
+
+const top100Emitting = new Set(
+  [...SORTED_DATA]
     .sort(
       (a, b) =>
-        b.emissions_quantity_avoided - a.emissions_quantity_avoided ||
+        Number(b.emissions_quantity) - Number(a.emissions_quantity) ||
         a.asset_id.localeCompare(b.asset_id)
     )
     .slice(0, topNumber)
@@ -50,10 +51,10 @@ const top100MexicoIds = new Set(
 );
 
 const top100AnnexIds = new Set(
-  SORTED_DATA.filter((d) => (d["annexOrNot"] == "true" ? true : false))
+  [...SORTED_DATA.filter((d) => (d["annexOrNot"] == "true" ? true : false))]
     .sort(
       (a, b) =>
-        b.emissions_quantity_avoided - a.emissions_quantity_avoided ||
+        +b[SORT_VARIABLE] - +a[SORT_VARIABLE] ||
         a.asset_id.localeCompare(b.asset_id)
     )
     .slice(0, topNumber)
@@ -62,24 +63,26 @@ const top100AnnexIds = new Set(
 
 SORTED_DATA.forEach((d, i) => {
   d[SORT_VARIABLE] = +d[SORT_VARIABLE];
+  d["emissions_quantity"] = +d["emissions_quantity"];
   d["lat"] = +d["lat"];
   d["lon"] = +d["lon"];
   d["annexOrNot"] = d["annexOrNot"] == "true" ? true : false;
   d.top100OrNot = i < topNumber;
-  d.top100InMexico = top100MexicoIds.has(d.asset_id);
+  d.top100InMexico = top100Emitting.has(d.asset_id);
   d.top100InAnnex = top100AnnexIds.has(d.asset_id);
 });
 
 const TotalNumberOfBars = 200;
 const filteredData = SORTED_DATA.slice(0, TotalNumberOfBars);
 const radiusScale = d3
-  .scaleSqrt()
+  .scalePow()
+  .exponent(0.5)
   .domain(d3.extent(SORTED_DATA, (d) => +d[X_VARIABLE]))
-  .range([1, 20]);
+  .range([0.1, 30]);
 
 // Color related
-const defaultColor = "hsla(0, 0%, 78%, 1.0)";
-const highlightColor = "hsla(0, 0%, 31%, 1.0)";
+const defaultColor = "hsla(182, 30%, 49%, 0.6)";
+const highlightColor = "hsla(0, 0%, 31%, 0.8)";
 const strokeColor = "hsla(355, 100%, 100%, 1.0)";
 function hslaToRGBA(hslaString) {
   // Create a temporary div to use the browser's color conversion
@@ -109,9 +112,8 @@ function LandfillView() {
     setCurrentStepIndex(data);
   };
 
-  console.log(filteredData);
   return (
-    <div className=" relative ">
+    <div className=" relative bg-[#F7F9ED]">
       <header className="  ">
         <h1 className="font-black max-w-[650px] text-[3rem] m-auto leading-[1.1]">
           Accelerating global decarbonization through emissionality: an example
@@ -297,7 +299,7 @@ function LandfillView() {
                     style={{
                       paddingTop: `${stepIndex == 0 ? "10vh" : "0vh"}`,
                       paddingBottom: "110vh",
-                      opacity: 0
+                      opacity: 0,
                     }}
                     id="g-header-container"
                     className="w-full  justify-center items-center "
@@ -331,7 +333,7 @@ function LandfillView() {
           </div>
         </div>
 
-        <section className="h-screen w-screen bg-[#D4DADC] pt-[10vh] flex flex-col justify-center items-center ">
+        <section className="h-screen w-screen bg-[#F7F9ED] pt-[10vh] flex flex-col justify-center items-center ">
           <div className="max-w-[650px] m-auto">
             <h1 className="text-[3rem] font-semibold tracking-widest">
               Optimizing for Impact
