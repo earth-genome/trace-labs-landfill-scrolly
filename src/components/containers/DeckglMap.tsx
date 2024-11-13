@@ -22,6 +22,7 @@ type DataType = {
   message: string;
 };
 const defaultOpacity = 235;
+const mapDefaultFill = [231, 242, 206, 200];
 function easeOutExpo(x: number): number {
   return x === 1 ? 1 : 1 - Math.pow(2, -10 * x);
 }
@@ -49,6 +50,7 @@ const DeckglMap = memo(
     defaultColor = [121, 180, 173, 100],
     strokeColor = [57, 144, 153, 255],
     radiusScale,
+    currentStepCondition,
   }: {
     data: any; // Assuming GeoJSON type, adjust if necessary
     colorVariable: string;
@@ -62,6 +64,7 @@ const DeckglMap = memo(
     defaultColor: number[];
     strokeColor: number[];
     radiusScale: d3.ScaleSqrt<number, number>;
+    currentStepCondition: (d: any) => any;
   }) => {
     const [viewState, setViewState] = useState(initialViewState);
 
@@ -99,13 +102,13 @@ const DeckglMap = memo(
             ),
             getFillColor: (d) => {
               if (currentStepIndex === 0) {
-                return [234, 234, 234, 30];
+                return mapDefaultFill;
               } else if (currentStepIndex === 1) {
                 return annexCountries.includes(d.properties.iso_a3_eh)
-                  ? [234, 234, 234, 130]
-                  : [234, 234, 234, 30];
+                  ? [231, 242, 206, 250]
+                  : [231, 242, 206, 10];
               } else {
-                return [234, 234, 234, 30];
+                return mapDefaultFill;
               }
             },
             getLineWidth: (d) => {
@@ -136,10 +139,11 @@ const DeckglMap = memo(
             autoHighlight: false,
             stroked: true,
             getLineColor: [0, 0, 0, 255],
-
+            lineCapRounded: true,
+            lineJointRounded: true,
             lineWidthUnits: "pixels",
             lineWidthScale: 1,
-            lineWidthMinPixels: 0.25,
+            lineWidthMinPixels: 0.2,
             lineWidthMaxPixels: 100,
           }),
           new ScatterplotLayer({
@@ -211,7 +215,8 @@ const DeckglMap = memo(
     );
 
     useEffect(() => {
-      if (currentStepIndex >= 3) {
+      // currentStepCondition?.label === "step 1 overall dots with legend"
+      if (currentStepIndex > 0) {
         setViewState({
           longitude: -94.499126,
           latitude: 29.565815,

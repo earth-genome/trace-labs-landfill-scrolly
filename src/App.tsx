@@ -27,7 +27,7 @@ import VisibleTextBlock from "@/components/custom-ui-components/VisibleTextBlock
 
 // NOTE: Big Container components
 import DeckglMap from "./components/containers/DeckglMap";
-
+import HeaderArticle from "./components/containers/HeaderArticle";
 // NOTE: Custom Chart components
 import BarChart from "./components/custom-chart-components/BarChart";
 import PieChart from "./components/custom-chart-components/PieChart";
@@ -81,7 +81,7 @@ const radiusScale = d3
   .range([0.1, 30]);
 
 // Color related
-const defaultColor = "hsla(182, 30%, 49%, 0.6)";
+const defaultColor = "hsla(182, 30%, 49%, 0.1)";
 const highlightColor = "hsla(0, 0%, 31%, 0.8)";
 const strokeColor = "hsla(355, 100%, 100%, 1.0)";
 function hslaToRGBA(hslaString) {
@@ -104,7 +104,7 @@ function LandfillView() {
   const { parentRef } = useParentSize();
   const [sliderValue, setSliderValue] = useState([33]);
 
-  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [currentStepIndex, setCurrentStepIndex] = useState(null);
 
   // This callback fires when a Step hits the offset threshold. It receives the
   // data prop of the step, which in this demo stores the index of the step.
@@ -112,87 +112,10 @@ function LandfillView() {
     setCurrentStepIndex(data);
   };
 
+  console.log(Object.values(STEP_METADATA));
   return (
     <div className=" relative bg-[#F7F9ED]">
-      <header className="  ">
-        <h1 className="font-black max-w-[650px] text-[3rem] m-auto leading-[1.1]">
-          Accelerating global decarbonization through emissionality: an example
-          from reducing landfill methane emissions
-        </h1>
-        <p className="max-w-[650px] m-auto">
-          Decarbonization strategies often base emissions-reduction
-          interventions on two assumptions — working locally and focusing on the
-          largest emitters. This inherently limits the impact these projects can
-          have. A superior approach is called emissionality, a decarbonization
-          strategy that focuses on investing in interventions that can yield the
-          greatest emissions reduction, regardless of their physical location
-          around the world.
-        </p>
-        <p className="max-w-[650px] m-auto">
-          In this example, we show how emissionality can nearly double
-          real-world emissions reductions. Deployed at scale and across sectors,
-          the additional decarbonization benefit is measured in gigatons
-          annually.
-        </p>
-        <h3 className="text-[2rem] font-bold mx-auto">
-          Example: Landfill methane emissions
-        </h3>
-        <p className="max-w-[650px] m-auto">
-          For this example, we focus on landfill methane emissions in
-          particular. In practice more broadly, such an emissionality approach
-          can be taken for decarbonization in any given sector, such as power
-          (electricity generation) or steel — or even across sectors.
-        </p>
-        <p className="max-w-[650px] m-auto">
-          Methane is a potent but shorter-lived greenhouse gas (GHG), with a
-          global warming potential (GWP) some 85 times stronger than carbon
-          dioxide on a 20-year time scale, and still 25 times stronger than CO2
-          on a 100-year time horizon. Thus, near-term methane emissions
-          reductions can have an outsized beneficial influence on overall
-          climate action.
-        </p>
-        <p className="max-w-[650px] m-auto">
-          The waste sector is one of the largest human-made sources of methane.
-          Landfill emissions can be reduced in several ways, such as by
-          upgrading a landfill from an unmanaged disposal site to a covered
-          sanitary landfill.
-        </p>
-        <p className="max-w-[650px] m-auto">
-          Capping landfills with various materials traps much of the methane
-          they create, improving local air quality and preventing the methane
-          from being directly released to the atmosphere where it contributes to
-          the climate crisis. Capping also provides a pathway for capturing
-          landfill gas (LFG), enabling LFG-to-energy uses, also.
-        </p>
-        <h3 className="text-[2rem] font-bold mx-auto">
-          What if we could cap 100 Landfills?
-        </h3>
-        <p className="max-w-[650px] m-auto">
-          Let’s imagine the funds and political will have come together amongst
-          the UN’s Annex I (historically industrialized) nations to cap 100
-          landfills. Climate TRACE uses AI and public data to track and
-          characterize 9,624 landfills worldwide. The Annex I nations have
-          recognized the potential to cut planet-heating emissions and are
-          evaluating options for how to best prioritize this group of just over
-          1% of all landfills tracked by Climate TRACE.
-        </p>
-        <p className="max-w-[650px] m-auto">
-          Scenario 1: Two assumptions In our first scenario, these nations make
-          two reasonable-seeming assumptions: Work locally: Collective global
-          climate action often focuses on countries taking steps to reduce their
-          own individual emissions, such as through Nationally Determined
-          Contributions (NDCs). Corporations often apply a similar, localized
-          approach to decarbonizing their operational footprint and supply
-          chain. Focusing on most-emitting landfills: Landfills with the
-          greatest emissions among Annex I countries would, at first glance,
-          seem to be the best candidates to be capped. Now we evaluate the net
-          climate impact of these assumptions.
-        </p>
-        <p className="max-w-[650px] m-auto"></p>
-        <p className="max-w-[650px] m-auto"></p>
-        <p className="max-w-[650px] m-auto"></p>
-        <p className="max-w-[650px] m-auto"></p>
-      </header>
+      <HeaderArticle />
       <main className="flex flex-col ">
         <div className=" relative ">
           {/* sticky content starts */}
@@ -207,7 +130,7 @@ function LandfillView() {
                 onValueChange={(value) => setSliderValue(value)}
               /> */}
 
-            {currentStepIndex > 2 && (
+            {currentStepIndex > 1 && (
               <>
                 <section className="absolute top-0 left-[2%] max-w-[34vw]">
                   <h1 className=" text-3xl font-thin opacity-40 mb-8">
@@ -258,6 +181,9 @@ function LandfillView() {
                       defaultColor={hslaToRGBA(defaultColor)}
                       strokeColor={hslaToRGBA(strokeColor)}
                       radiusScale={radiusScale}
+                      currentStepCondition={
+                        STEP_METADATA[currentStepIndex]
+                      }
                     />
                   );
                 }}
@@ -291,22 +217,22 @@ function LandfillView() {
 
           {/* sticky content ends */}
           {/* NOTE: Steps Container: flowing text */}
-          <div className="relative z-10 mt-[-100vh] w-full ">
-            <Scrollama offset={0.4} onStepEnter={onStepEnter}>
-              {[1, 2, 3, 4, 5].map((_, stepIndex) => (
+          <div className="relative z-[99999999] mt-[-100vh] w-full">
+            <Scrollama offset={0.4} onStepEnter={onStepEnter} debug>
+              {Object.values(STEP_METADATA).map((stepblock, stepIndex) => (
                 <Step data={stepIndex} key={stepIndex}>
                   <div
                     style={{
-                      paddingTop: `${stepIndex == 0 ? "10vh" : "0vh"}`,
+                      paddingTop: `${stepIndex == 0 ? "100vh" : "0vh"}`,
                       paddingBottom: "110vh",
-                      opacity: 0,
+                      opacity: stepblock.text.length > 0 ? 1 : 0,
                     }}
                     id="g-header-container"
-                    className="w-full  justify-center items-center "
+                    className="justify-center items-center w-[45%] mx-auto"
                   >
-                    <header
+                    <section
                       id="interactive-header"
-                      className="h-[800px] w-4/5 flex flex-col justify-center items-center"
+                      className=" h-[40vh]  flex flex-col justify-center items-center"
                     >
                       {/* <h1
                         id="interactive-heading"
@@ -315,17 +241,17 @@ function LandfillView() {
                       >
                         Methane Matters
                       </h1> */}
-                      <h2 className="text-[#42959D] text-[2rem]">
+                      {/* <h2 className="text-[#42959D] text-[2rem]">
                         {STEP_METADATA[stepIndex]?.label}
-                      </h2>
+                      </h2> */}
                       <p
                         id="interactive-leadin"
                         data-testid="interactive-leadin"
-                        className="text-lg"
+                        className="lg:text-2xl text-center"
                       >
                         {STEP_METADATA[stepIndex]?.text}
                       </p>
-                    </header>
+                    </section>
                   </div>
                 </Step>
               ))}

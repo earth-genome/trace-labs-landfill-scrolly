@@ -3,12 +3,14 @@ import { useMemo } from "react";
 // Optional: Add metadata for each step if needed
 export const STEP_METADATA = {
   0: {
-    label: "Pete Step 1",
-    text: `Start with a "clean" map = all countries in white background, all landfills have small grey dots.`,
+    label: "step 1 overall dots",
+    text: `To do so, we will start with a map of the world, displaying the locations of all 9,624 landfills tracked by Climate TRACE in the world. This visualization shows each landfill as a circle, with its size corresponding to the emissions reduction potential of that landfill.`,
+    condition: (d: any) => false,
   },
   1: {
-    label: "Pete Step 2",
-    text: " Next animation: highlight via solid fill color shading all Annex I countries.",
+    label: "step 1 overall dots with legend",
+    text: "",
+    condition: (d: any) => false,
   },
   2: {
     label: "Pete Step 3",
@@ -29,7 +31,6 @@ export const STEP_CONDITIONS = {
   2: (d: any) => d?.top100InAnnex === true,
   3: (d: any) => d?.top100InAnnex === true,
   4: (d: any) => d?.top100OrNot === true,
-  
 } as const;
 
 export const useStepFilteredData = (data: any[], stepIndex: number) => {
