@@ -435,7 +435,7 @@ h1#interactive-heading {
   box-sizing: border-box;
   font-family: "APK-Protocol", sans-serif;
   font-weight: 400;
-  font-size: inherit;
+
   -webkit-appearance: none;
   -webkit-font-smoothing: antialiased;
   background: none;

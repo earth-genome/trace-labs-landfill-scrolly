@@ -36,11 +36,11 @@ const BarChart: React.FC<BarChartProps> = ({
 
   // Define inner dimensions
   const innerWidth = useMemo(
-    () => Math.max(250, width - margin.left - margin.right),
+    () => Math.max(50, width - margin.left - margin.right),
     [width]
   );
   const innerHeight = useMemo(
-    () => Math.max(250, height - margin.top - margin.bottom),
+    () => Math.max(50, height - margin.top - margin.bottom),
     [height]
   );
 

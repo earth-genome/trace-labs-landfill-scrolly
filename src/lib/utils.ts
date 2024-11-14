@@ -22,3 +22,18 @@ export function hslaToRGBA(hslaString) {
   const [r, g, b, a] = rgbaColor.match(/[\d.]+/g).map(Number);
   return [r, g, b, Math.round(a * 255)];
 }
+export function getResponsiveZoom(width: number) {
+  // Base zoom level for larger screens
+  let baseZoom = 1.6;
+
+  // Adjust zoom based on viewport width
+  // These thresholds can be tuned based on your specific needs
+  if (width < 1440) {
+    // typical tablet/small laptop breakpoint
+    return 1 // zoom out for smaller screens
+  } else if (width < 1024) {
+    // typical laptop breakpoint
+    return 0.8;
+  }
+  return baseZoom; // default for larger screens
+}

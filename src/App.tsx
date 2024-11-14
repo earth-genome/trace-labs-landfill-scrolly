@@ -91,7 +91,7 @@ const strokeColor = "hsla(355, 100%, 100%, 1.0)";
 function LandfillView() {
   const { parentRef } = useParentSize();
   const [sliderValue, setSliderValue] = useState([33]);
-
+  const { width: screenWidth } = useScreenSize();
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
 
   // This callback fires when a Step hits the offset threshold. It receives the
@@ -123,7 +123,6 @@ function LandfillView() {
                 step={0.1}
                 onValueChange={(value) => setSliderValue(value)}
               /> */}
-
               {currentStepIndex >= 1 && (
                 <>
                   <section
@@ -136,7 +135,7 @@ function LandfillView() {
                       }
                     /> */}
                     <div
-                      className="w-[300px] h-[120px] text-lg tracking-tight leading-relaxed"
+                      className="w-[300px] h-[120px] text-lg tracking-tight leading-tight font-thin"
                       style={{
                         display: STEP_METADATA[currentStepIndex]?.sideText
                           ? "block"
@@ -154,8 +153,16 @@ function LandfillView() {
                       style={{
                         bottom:
                           currentStepIndex >= 8
-                            ? "calc(15vh + 300px)"
-                            : "calc(20vh + 100px)",
+                            ? screenWidth >= 1440
+                              ? // big screen  bar chart
+                                "calc(11vh + 300px)"
+                              : // small screen  bar chart
+                                "calc(45vh)"
+                            : screenWidth >= 1440
+                            ? // big screen no bar
+                              "calc(11vh + 100px)"
+                            : // small screen no bar
+                              "calc(33vh)",
                       }}
                     >
                       <Legend
@@ -166,7 +173,7 @@ function LandfillView() {
                   </section>
                 </>
               )}
-
+              ,
               {/* 
             <h2
               className="z-[100] mt-4 text-xl font-semibold"
@@ -199,6 +206,7 @@ function LandfillView() {
                         strokeColor={hslaToRGBA(strokeColor)}
                         radiusScale={radiusScale}
                         currentStepCondition={STEP_METADATA[currentStepIndex]}
+                        screenWidth={screenWidth}
                       />
                     );
                   }}
@@ -207,7 +215,7 @@ function LandfillView() {
               {/* NOTE: Bottom Bar Chart Container */}
               <div
                 style={{ display: currentStepIndex >= 3 ? "flex" : "none" }}
-                className="h-[300px] w-full absolute bottom-0 left-0 justify-center items-center"
+                className="h-[30vh] w-full absolute bottom-0 left-0 justify-center items-center"
               >
                 <figure className="h-full w-full bg-[hsla(195, 10%, 100%, 0.582)] box-shadow-[0_0_10px_0_rgba(0,0,0,0.1)] rounded-md z-[50]">
                   {currentStepIndex >= 8 && (
@@ -236,7 +244,7 @@ function LandfillView() {
             {/* sticky content ends */}
             {/* NOTE: Steps Container: flowing text */}
             <div className="relative z-[99999999] mt-[-100vh] w-full">
-              <Scrollama offset={0.5} onStepEnter={onStepEnter} debug>
+              <Scrollama offset={0.5} onStepEnter={onStepEnter}>
                 {Object.values(STEP_METADATA).map((stepblock, stepIndex) => (
                   <Step data={stepIndex} key={stepIndex}>
                     <div
@@ -265,7 +273,7 @@ function LandfillView() {
                         <p
                           id="interactive-leadin"
                           data-testid="interactive-leadin"
-                          className="lg:text-2xl text-center leading-loose"
+                          className="lg:text-xl text-center leading-tight"
                         >
                           {STEP_METADATA[stepIndex]?.text}
                         </p>
@@ -294,7 +302,10 @@ function LandfillView() {
               </p>
               <div className="flex-grow  flex justify-center items-center">
                 {/* {top100Conditions.map((d, i) => ( */}
-                <figure className="w-full max-w-[850px] h-[400px]">
+                <figure
+                  className="w-full max-w-[850px] h-[40vh]"
+                  style={{ height: screenWidth < 1440 ? "30vh" : "40vh" }}
+                >
                   <ParentSize>
                     {({ width, height }) => (
                       <BarChart

@@ -15,16 +15,19 @@ const EmissionLegend = ({
   defaultColor: string;
 }) => {
   return (
-    <div className="bg-[#f8f8e9] bg-opacity-10  backdrop-blur-sm text-sm rounded-md w-[300px] space-y-4 z-50">
+    <div className="bg-[#f8f8e9] bg-opacity-10  backdrop-blur-sm rounded-md w-[250px] space-y-4 z-50">
       <div className="space-y-4 ">
         {/* Color legend */}
-        <div className="flex flex-col gap-2 ">
+        <div
+          className="flex flex-col gap-2 font-semibold"
+          style={{ fontSize: "10px" }}
+        >
           <div className="flex items-start space-x-2">
             <span
               className="size-4 rounded-full flex-shrink-0 mt-1"
               style={{ backgroundColor: highlightColor }}
             ></span>
-            <p className="text-gray-600">
+            <p className="text-gray-600 leading-tight">
               The 100 largest landfills across Annex I countries
             </p>
           </div>
@@ -36,9 +39,12 @@ const EmissionLegend = ({
             <p className="text-gray-600">The rest</p>
           </div>
         </div>
-        <p className="text-gray-700 font-bold">Emission quantity avoided (T)</p>
+        <p className="text-gray-700 font-bold" style={{ fontSize: "10px" }}>Emission quantity avoided (T)</p>
         {/* Size legend */}
-        <div className="grid grid-cols-[40px_1fr] gap-y-3 gap-x-2 flex-col-reverse">
+        <div
+          className="grid grid-cols-[40px_1fr] gap-y-4 gap-x-2 flex-col-reverse"
+          style={{ fontSize: "10px", marginTop: "4px" }}
+        >
           {[...LegendValues].reverse().map((item) => (
             <React.Fragment key={item.value}>
               <div className="relative flex items-center justify-center">

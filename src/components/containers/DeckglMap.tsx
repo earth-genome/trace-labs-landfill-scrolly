@@ -15,6 +15,8 @@ import { GeoJsonLayer, ScatterplotLayer } from "@deck.gl/layers";
 import Tooltip from "@/components/reusable-ui-components/tooltip";
 import worldGEOJSON from "@/data/world.json";
 import LA_GEOJSON from "@/data/los-angeles-city.json";
+import { getResponsiveZoom } from "@/lib/utils";
+
 const DEFAULT_OPACITY = 105;
 
 const mapDefaultFill = [231, 242, 206, 200];
@@ -46,6 +48,7 @@ const DeckglMap = memo(
     strokeColor = [57, 144, 153, 255],
     radiusScale,
     currentStepCondition,
+    screenWidth,
   }: {
     data: any;
     colorVariable: string;
@@ -59,6 +62,7 @@ const DeckglMap = memo(
     strokeColor: number[];
     radiusScale: d3.ScaleSqrt<number, number>;
     currentStepCondition: (d: any) => any;
+    screenWidth: number;
   }) => {
     const [viewState, setViewState] = useState(initialViewState);
     const [hoverInfo, setHoverInfo] = useState<PickingInfo<any> | null>(null);
@@ -261,9 +265,9 @@ const DeckglMap = memo(
         });
       } else if (currentStepIndex > 0) {
         setViewState({
-          longitude: -94.499126,
+          longitude: -55.499126,
           latitude: 29.565815,
-          zoom: 1.2,
+          zoom: getResponsiveZoom(screenWidth),
           transitionInterpolator: new FlyToInterpolator({
             speed: 0.6,
             curve: 1.2,
