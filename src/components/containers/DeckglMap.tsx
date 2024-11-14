@@ -119,7 +119,7 @@ const DeckglMap = memo(
             currentStepCondition?.label === "step 2 annex choropleth"
           ) {
             return annexCountries.includes(d.properties.iso_a3_eh)
-              ? [231, 242, 206, 250]
+              ? [231, 242, 206, 0]
               : [231, 242, 206, 10];
           } else if (currentStepCondition?.label === "step 4 LA example") {
             return d.properties.name === "Los Angeles County"
@@ -135,7 +135,7 @@ const DeckglMap = memo(
           } else if (
             currentStepCondition?.label === "step 2 annex choropleth"
           ) {
-            return annexCountries.includes(d.properties.iso_a3_eh) ? 3 : 0;
+            return annexCountries.includes(d.properties.iso_a3_eh) ? 1 : 0;
           } else if (currentStepCondition?.label === "step 4 LA example") {
             return 0;
           } else {
@@ -194,8 +194,9 @@ const DeckglMap = memo(
         lineWidthMaxPixels: 100,
         transitions: {
           getRadius: {
-            duration: 100,
+            duration: 1000,
             easing: d3.easeCubicInOut,
+            enter: (value) => [0, value], // Start from 0 and animate to final value
           },
           getFillColor: {
             duration: 1000,
@@ -210,7 +211,7 @@ const DeckglMap = memo(
           setHoverInfo(info.object ? info : null);
         },
         updateTriggers: {
-          getRadius: hoverInfo?.object?.asset_id,
+          getRadius: [hoverInfo?.object?.asset_id, currentStepIndex], // Add currentStepIndex to trigger transitions
           getLineWidth: hoverInfo?.object?.asset_id,
         },
         pickable: true,
