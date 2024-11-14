@@ -1,32 +1,8 @@
 {
-  "rewrites": [
-    {
-      "source": "/landfill/(.*)",
-      "destination": "/landfill/index.html"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/landfill/assets/(.*)",
-      "dest": "/landfill/assets/$1",
-      "headers": {
-        "Content-Type": "application/javascript"
+    "rewrites": [
+      {
+        "source": "/(.*)",
+        "destination": "/index.html"
       }
-    },
-    {
-      "src": "/landfill/(.*)\\.js$",
-      "dest": "/landfill/$1.js",
-      "headers": {
-        "Content-Type": "application/javascript"
-      }
-    },
-    {
-      "src": "/(.*)\\.(.+)$",
-      "dest": "/landfill/$1.$2"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/landfill/index.html"
-    }
-  ]
-}
+    ]
+  }

@@ -10,12 +10,17 @@ const __dirname = dirname(__filename);
 export default defineConfig({
   base: "/landfill/",
   build: {
+    outDir: "dist/landfill",  // Change this to output to landfill subdirectory
     assetsDir: "assets",
     rollupOptions: {
       output: {
-        assetFileNames: "assets/[name].[hash][extname]",
+        assetFileNames: (assetInfo) => {
+          const info = assetInfo.name.split(".");
+          const ext = info[info.length - 1];
+          return `assets/[name].[hash].${ext}`;
+        },
         chunkFileNames: "assets/[name].[hash].js",
-        entryFileNames: "assets/[name].[hash].js",
+        entryFileNames: "assets/[name].[hash].js"
       },
     },
   },
