@@ -1,8 +1,22 @@
 {
-    "rewrites": [
-      {
-        "source": "/(.*)",
-        "destination": "/index.html"
-      }
-    ]
-  }
+  "rewrites": [
+    {
+      "source": "/landfill/(.*)",
+      "destination": "/landfill/index.html"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/landfill/assets/(.*)",
+      "dest": "/landfill/assets/$1"
+    },
+    {
+      "src": "/(.*)\\.(.+)$",
+      "dest": "/landfill/$1.$2"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/landfill/index.html"
+    }
+  ]
+}
