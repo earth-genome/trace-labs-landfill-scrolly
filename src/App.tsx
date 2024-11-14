@@ -14,11 +14,12 @@ import data from "@/data/data.csv";
 // import stackedBarChartData from "@/data/stackedBarChart.csv";
 // NOTE: config + static data
 import {
-  STEP_CONDITIONS,
   useStepFilteredData,
   STEP_METADATA,
   top100Conditions,
-} from "@/utility/stepConfig";
+} from "@/utility/stepConfig.tsx";
+
+import { hslaToRGBA } from "@/lib/utils";
 // NOTE: Custom UI components
 import Legend from "@/components/custom-ui-components/Legend";
 import VisibleTextBlock from "@/components/custom-ui-components/VisibleTextBlock";
@@ -68,7 +69,7 @@ SORTED_DATA.forEach((d, i) => {
   d["lon"] = +d["lon"];
   d["annexOrNot"] = d["annexOrNot"] == "true" ? true : false;
   d.top100OrNot = i < topNumber;
-  d.top100InMexico = top100Emitting.has(d.asset_id);
+  d.top100Emitting = top100Emitting.has(d.asset_id);
   d.top100InAnnex = top100AnnexIds.has(d.asset_id);
 });
 
@@ -76,35 +77,22 @@ const TotalNumberOfBars = 200;
 const filteredData = SORTED_DATA.slice(0, TotalNumberOfBars);
 const radiusScale = d3
   .scalePow()
-  .exponent(0.5)
+  .exponent(0.6)
   .domain(d3.extent(SORTED_DATA, (d) => +d[X_VARIABLE]))
   .range([0.1, 30]);
 
 // Color related
-const defaultColor = "hsla(182, 30%, 49%, 0.1)";
+const defaultColor = "hsla(182, 30%, 49%, 0.9)";
 const highlightColor = "hsla(0, 0%, 31%, 0.8)";
 const strokeColor = "hsla(355, 100%, 100%, 1.0)";
-function hslaToRGBA(hslaString) {
-  // Create a temporary div to use the browser's color conversion
-  const div = document.createElement("div");
-  div.style.color = hslaString;
-  document.body.appendChild(div);
 
-  // Get the computed RGB values
-  const rgbaColor = window.getComputedStyle(div).color;
-  document.body.removeChild(div);
-
-  // Extract RGBA values (converting alpha to 0-255 range)
-  const [r, g, b, a] = rgbaColor.match(/[\d.]+/g).map(Number);
-  return [r, g, b, Math.round(a * 255)];
-}
 
 // Move your current App component content into a new LandfillView component
 function LandfillView() {
   const { parentRef } = useParentSize();
   const [sliderValue, setSliderValue] = useState([33]);
 
-  const [currentStepIndex, setCurrentStepIndex] = useState(null);
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
 
   // This callback fires when a Step hits the offset threshold. It receives the
   // data prop of the step, which in this demo stores the index of the step.
@@ -112,7 +100,6 @@ function LandfillView() {
     setCurrentStepIndex(data);
   };
 
-  console.log(Object.values(STEP_METADATA));
   return (
     <div className=" relative bg-[#F7F9ED]">
       <HeaderArticle />
@@ -130,16 +117,26 @@ function LandfillView() {
                 onValueChange={(value) => setSliderValue(value)}
               /> */}
 
-            {currentStepIndex > 1 && (
+            {currentStepIndex >= 1 && (
               <>
-                <section className="absolute top-0 left-[2%] max-w-[34vw]">
+                <section className="absolute top-0 left-[2%] max-w-[34vw] h-screen">
                   <h1 className=" text-3xl font-thin opacity-40 mb-8">
                     Methane Matters
                   </h1>
-                  <VisibleTextBlock currentStepIndex={currentStepIndex} />
-                  <h2 className="text-[2rem] font-bold">BIG NUMBER</h2>
+                  <VisibleTextBlock
+                    currentStepCondition={
+                      STEP_METADATA[currentStepIndex]?.sideText
+                    }
+                  />
+                  {/* <h2 className="text-[2rem] font-bold">BIG NUMBER</h2> */}
 
-                  <div>
+                  <div
+                    className="absolute  left-0"
+                    style={{
+                      bottom:
+                        currentStepIndex >= 9 ? "calc(5vh + 300px)" : "10vh",
+                    }}
+                  >
                     <Legend
                       highlightColor={highlightColor}
                       defaultColor={defaultColor}
@@ -176,14 +173,11 @@ function LandfillView() {
                       width={width}
                       height={height}
                       currentStepIndex={currentStepIndex}
-                      STEP_CONDITIONS={STEP_CONDITIONS}
                       highlightColor={hslaToRGBA(highlightColor)}
                       defaultColor={hslaToRGBA(defaultColor)}
                       strokeColor={hslaToRGBA(strokeColor)}
                       radiusScale={radiusScale}
-                      currentStepCondition={
-                        STEP_METADATA[currentStepIndex]
-                      }
+                      currentStepCondition={STEP_METADATA[currentStepIndex]}
                     />
                   );
                 }}
@@ -195,14 +189,16 @@ function LandfillView() {
               className="h-[300px] w-full absolute bottom-0 left-0 justify-center items-center"
             >
               <figure className="h-full w-full bg-[hsla(195, 10%, 100%, 0.582)] box-shadow-[0_0_10px_0_rgba(0,0,0,0.1)] rounded-md z-[50]">
-                {currentStepIndex !== 0 && (
+                {currentStepIndex >= 9 && (
                   <ParentSize>
                     {({ width, height }) => (
                       <BarChart
                         width={width}
                         height={height}
                         data={filteredData}
-                        fillCondition={STEP_CONDITIONS[currentStepIndex]}
+                        fillCondition={
+                          STEP_METADATA[currentStepIndex]?.condition
+                        }
                         xVariable={Y_VARIABLE}
                         yVariable={X_VARIABLE}
                         defaultColor={defaultColor}
@@ -218,14 +214,14 @@ function LandfillView() {
           {/* sticky content ends */}
           {/* NOTE: Steps Container: flowing text */}
           <div className="relative z-[99999999] mt-[-100vh] w-full">
-            <Scrollama offset={0.4} onStepEnter={onStepEnter} debug>
+            <Scrollama offset={0.5} onStepEnter={onStepEnter} debug>
               {Object.values(STEP_METADATA).map((stepblock, stepIndex) => (
                 <Step data={stepIndex} key={stepIndex}>
                   <div
                     style={{
                       paddingTop: `${stepIndex == 0 ? "100vh" : "0vh"}`,
-                      paddingBottom: "110vh",
-                      opacity: stepblock.text.length > 0 ? 1 : 0,
+                      paddingBottom: "100vh",
+                      opacity: stepblock.text ? 1 : 0,
                     }}
                     id="g-header-container"
                     className="justify-center items-center w-[45%] mx-auto"

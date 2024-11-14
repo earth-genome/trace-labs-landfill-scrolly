@@ -4,38 +4,133 @@ import { useMemo } from "react";
 export const STEP_METADATA = {
   0: {
     label: "step 1 overall dots",
-    text: `To do so, we will start with a map of the world, displaying the locations of all 9,624 landfills tracked by Climate TRACE in the world. This visualization shows each landfill as a circle, with its size corresponding to the emissions reduction potential of that landfill.`,
+    text: (
+      <>
+        To do so, we will start with a map of the world, displaying the
+        locations of all <strong>9,624 landfills</strong> tracked by Climate
+        TRACE in the world. This visualization shows each landfill as a circle,
+        with its size corresponding to the
+        <em>emissions reduction potential</em> of that landfill.
+      </>
+    ),
     condition: (d: any) => false,
   },
+
   1: {
-    label: "step 1 overall dots with legend",
-    text: "",
+    label: "step 2 before animating the annex in",
+    text: (
+      <>
+        In our first scenario, we’ll cap landfills in Annex I countries (outlined).
+      </>
+    ),
     condition: (d: any) => false,
   },
   2: {
-    label: "Pete Step 3",
-    text: "Next animation: fade off the Annex I color, and now fade in the enlarged green circles for the 100 landfills of scenario 1.",
+    label: "step 2 annex choropleth",
+    text: "",
+    sideText: "side text here",
+    condition: (d: any) => false,
   },
   3: {
-    label: "Pete Step 4",
-    text: "Next animation: add the histogram chart of scenario 1",
+    label: "step 3 before circles in",
+    text: (
+      <>
+          In our first scenario, we have capped the 100 largest landfills across
+        Annex I countries (highlighted in green). The rest of the 9,624 landfills
+        tracked by Climate TRACE – landfills that we have not capped – are
+        displayed in gray. Here, we might begin to question our first assumption
+        of working locally, since it’s clear that there are a lot of landfills
+        outside of Annex I countries that we have ignored.
+      </>
+    ),
+    condition: (d: any) => d?.top100Emitting === true,
+    dotOpacity: 255,
   },
   4: {
-    label: "Pete Step 5",
-    text: "Next animation: transition = fade out Annex I landfills not included in scenario 2, while fading in enlarged green circles of the landfills now included in the scope of the global emissionality approach. Histogram chart should also transition to scenario 2 coloring / results.",
+    label: "step 3  circles in",
+    text: "",
+    condition: (d: any) => d?.top100Emitting === true,
   },
-} as const;
-
-export const STEP_CONDITIONS = {
-  1: (d: any) => false,
-  2: (d: any) => d?.top100InAnnex === true,
-  3: (d: any) => d?.top100InAnnex === true,
-  4: (d: any) => d?.top100OrNot === true,
+  5: {
+    label: "step 4 just text 1",
+    text: "The size of each circle on the map is proportional to the emissions that would be reduced if that landfill were capped.  Despite being very large, many waste sites already have good practices in place such that capping would do little to reduce emissions further.",
+    condition: (d: any) => d?.top100Emitting === true,
+  },
+  6: {
+    label: "step 4 LA example",
+    text: (
+      <>
+        To choose one example, Puente Hills Landfill in Los Angeles is one of the
+        largest in the U.S., but has already been covered since its 2013 closure,
+        and has even operated an LFG-to-energy station since 1987, reducing
+        emissions further. Thus, we can question our second assumption, as well:
+        The most-emitting landfills may not actually provide much return on our
+        investment if their emissions intensity is already low.
+      </>
+    ),
+    condition: (d: any) => d?.top100Emitting === true,
+  },
+  7: {
+    label: "step 5 most emitting landfills bar chart",
+    text: "",
+    condition: (d: any) => d?.top100Emitting === true,
+  },
+  8: {
+    label: "step 5 most emitting landfills bar chart text",
+    text: (
+      <>
+        In the bar chart below, we sort all landfills in the world by the
+        emissions reductions that would actually result in capping them. The
+        chart shows the top 200 such landfills. In our current scenario, the
+        100 landfills that we’ve capped are sprinkled through the chart – many
+        landfills in gray have huge potential, but weren’t capped in this
+        scenario. Ultimately, Scenario 1 reduces emissions by 1.3 million metric
+        tonnes or Mt  1.3 n6 Gt1.3 million Mt, or 4.3% of all landfill emissions.
+      </>
+    ),
+    condition: (d: any) => d?.top100Emitting === true,
+  },
+  9: {
+    label: "step 6 pre scenario 2 text",
+    text: (
+      <>
+        Now, let us set the two assumptions of Scenario 1 (working locally and
+        focusing on largest landfills), and instead ask the question more
+        directly: With the budget to cover 100 landfills, which 100 landfills
+        anywhere and regardless of current emissions would actually have the most
+        impact if they were covered? To do this, we look at each landfill
+        globally, and we look at their emissions factors and activity to see the
+        actual effect of our actions (i.e. the emissions reduction potential).
+      </>
+    ),
+    condition: (d: any) => d?.top100Emitting === true,
+  },
+  10: {
+    label: "step 5 most emitting landfills bar chart",
+    text: (
+      <>
+        Without constraining ourselves to Annex I countries, many of the large gray
+        circles across the map that we ignored in Scenario 1 have now been
+        capped. In the bar chart, we see that the highest-potential 100 landfills
+        have been precisely targeted. By looking at each landfill and measuring
+        the emissions that might be reduced directly, we get a whopping 3.7
+        million metric tonnes or Mt Gt  12% reduction in emissions, or  12% of
+        all landfill emissions.
+      </>
+    ),
+    condition: (d: any) => d?.top100OrNot === true,
+  },
+  11: {
+    label: "step 5 most emitting landfills bar chart",
+    text: "",
+    condition: (d: any) => d?.top100OrNot === true,
+    sideText: "side text here",
+  },
 } as const;
 
 export const useStepFilteredData = (data: any[], stepIndex: number) => {
   return useMemo(() => {
-    const condition = STEP_CONDITIONS[stepIndex];
+    const condition = STEP_METADATA[stepIndex].condition;
     return condition ? data.filter(condition) : data;
   }, [data, stepIndex]);
 };
