@@ -103,7 +103,7 @@ function LandfillView() {
   return (
     <>
       <div
-        className="absolute top-[10px] z-[9999999999999]"
+        className="absolute top-[10px] z-[9999999999999] "
         style={{ left: `${margin.left}px` }}
       >
         <ClimateTraceHeader />
