@@ -8,7 +8,17 @@
   "routes": [
     {
       "src": "/landfill/assets/(.*)",
-      "dest": "/landfill/assets/$1"
+      "dest": "/landfill/assets/$1",
+      "headers": {
+        "Content-Type": "application/javascript"
+      }
+    },
+    {
+      "src": "/landfill/(.*)\\.js$",
+      "dest": "/landfill/$1.js",
+      "headers": {
+        "Content-Type": "application/javascript"
+      }
     },
     {
       "src": "/(.*)\\.(.+)$",
