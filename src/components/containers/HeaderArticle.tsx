@@ -5,7 +5,7 @@ export default function HeaderArticle() {
         Accelerating global decarbonization through emissionality: an example
         from reducing landfill methane emissions
       </h1>
-      <p className="max-w-[650px] m-auto">
+      <p className="max-w-[650px] m-auto ">
         Decarbonization strategies often base emissions-reduction interventions
         on two assumptions — working locally and focusing on the largest
         emitters. This inherently limits the impact these projects can have. A
@@ -19,7 +19,7 @@ export default function HeaderArticle() {
         emissions reductions. Deployed at scale and across sectors, the
         additional decarbonization benefit is measured in gigatons annually.
       </p>
-      <h3 className="text-[2rem] font-bold mx-auto">
+      <h3 className="text-[2rem] font-bold  text-center pt-10">
         Example: Landfill methane emissions
       </h3>
       <p className="max-w-[650px] m-auto">
@@ -48,7 +48,7 @@ export default function HeaderArticle() {
         climate crisis. Capping also provides a pathway for capturing landfill
         gas (LFG), enabling LFG-to-energy uses, also.
       </p>
-      <h3 className="text-[2rem] font-bold mx-auto">
+      <h3 className="text-[2rem] font-bold text-center pt-10">
         What if we could cap 100 Landfills?
       </h3>
       <p className="max-w-[650px] m-auto">

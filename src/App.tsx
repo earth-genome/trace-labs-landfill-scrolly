@@ -36,7 +36,7 @@ import PieChart from "./components/custom-chart-components/PieChart";
 const X_VARIABLE = "emissions_quantity_avoided";
 const Y_VARIABLE = "asset_id";
 const COLOR_VARIABLE = "gap";
-
+const margin = { top: 20, right: 20, bottom: 30, left: 40 };
 const topNumber = 100;
 const SORT_VARIABLE = "emissions_quantity_avoided";
 const SORTED_DATA = data.sort((a, b) => +b[SORT_VARIABLE] - +a[SORT_VARIABLE]);
@@ -56,7 +56,7 @@ const top100AnnexIds = new Set(
   [...SORTED_DATA.filter((d) => (d["annexOrNot"] == "true" ? true : false))]
     .sort(
       (a, b) =>
-        +b[SORT_VARIABLE] - +a[SORT_VARIABLE] ||
+        Number(b.emissions_quantity) - Number(a.emissions_quantity) ||
         a.asset_id.localeCompare(b.asset_id)
     )
     .slice(0, topNumber)
@@ -102,7 +102,10 @@ function LandfillView() {
 
   return (
     <>
-      <div className="absolute top-[10px] left-[10px] z-[9999999999999]">
+      <div
+        className="absolute top-[10px] z-[9999999999999]"
+        style={{ left: `${margin.left}px` }}
+      >
         <ClimateTraceHeader />
       </div>
       <div className=" relative bg-[#F7F9ED]">
@@ -123,22 +126,36 @@ function LandfillView() {
 
               {currentStepIndex >= 1 && (
                 <>
-                  <section className="absolute top-0 left-[2%] max-w-[34vw] h-screen">
-                    <h1 className=" text-3xl font-thin opacity-40 mb-8">
-                      Methane Matters
-                    </h1>
-                    <VisibleTextBlock
+                  <section
+                    className="absolute top-[100px]  max-w-[34vw] h-screen"
+                    style={{ left: `${margin.left}px` }}
+                  >
+                    {/* <VisibleTextBlock
                       currentStepCondition={
                         STEP_METADATA[currentStepIndex]?.sideText
                       }
-                    />
-                    {/* <h2 className="text-[2rem] font-bold">BIG NUMBER</h2> */}
+                    /> */}
+                    <div
+                      className="w-[300px] h-[120px] text-lg tracking-tight leading-relaxed"
+                      style={{
+                        display: STEP_METADATA[currentStepIndex]?.sideText
+                          ? "block"
+                          : "none",
+                      }}
+                    >
+                      {STEP_METADATA[currentStepIndex]?.sideText}
+                      <h2 className="text-[2rem] font-semibold mt-2">
+                        {STEP_METADATA[currentStepIndex]?.bigNumber}
+                      </h2>
+                    </div>
 
                     <div
                       className="absolute  left-0"
                       style={{
                         bottom:
-                          currentStepIndex >= 8 ? "calc(5vh + 300px)" : "10vh",
+                          currentStepIndex >= 8
+                            ? "calc(15vh + 300px)"
+                            : "calc(20vh + 100px)",
                       }}
                     >
                       <Legend
@@ -207,6 +224,7 @@ function LandfillView() {
                           yVariable={X_VARIABLE}
                           defaultColor={defaultColor}
                           highlightColor={highlightColor}
+                          margin={margin}
                         />
                       )}
                     </ParentSize>
@@ -247,7 +265,7 @@ function LandfillView() {
                         <p
                           id="interactive-leadin"
                           data-testid="interactive-leadin"
-                          className="lg:text-2xl text-center"
+                          className="lg:text-2xl text-center leading-loose"
                         >
                           {STEP_METADATA[stepIndex]?.text}
                         </p>
