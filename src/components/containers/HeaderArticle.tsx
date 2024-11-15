@@ -87,7 +87,7 @@ export default function HeaderArticle({
         evaluating options for how to best prioritize this group of just over 1%
         of all landfills tracked by Climate TRACE.
       </section>
-      <p className="max-w-[650px] m-auto">
+      <div className="max-w-[650px] m-auto">
         <h3 className="text-[1.5rem] font-semibold tracking-tight  text-left pt-10 ml-[-2px]">
           Scenario 1: Work locally, focusing on high emissions
         </h3>
@@ -108,7 +108,7 @@ export default function HeaderArticle({
         </ol>
         <br></br>
         Now we evaluate the net climate impact of these assumptions.
-      </p>
+      </div>
 
       <section className="relative h-[80px]">
         <ScrollIndicator color={shadowColor} />

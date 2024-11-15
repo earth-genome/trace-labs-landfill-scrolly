@@ -141,7 +141,7 @@ const DeckglMap = memo(
             currentStepIndex < 10
             // currentStepCondition?.label === "step 2 annex choropleth"
           ) {
-            return annexCountries.includes(d.properties.iso_a3_eh) ? 3 : 0;
+            return annexCountries.includes(d.properties.iso_a3_eh) ? 2 : 0;
           } else if (currentStepCondition?.label === "step 4 LA example") {
             return 0;
           } else {
@@ -240,7 +240,7 @@ const DeckglMap = memo(
           ? new GeoJsonLayer({
               id: "la-layer",
               data: LA_GEOJSON,
-              getFillColor: highlightColor,
+              getFillColor: defaultColor,
               getLineColor: [...defaultColor.slice(0, 3), 255],
               getLineWidth: (d) => {
                 return 3;
