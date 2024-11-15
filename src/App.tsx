@@ -311,7 +311,7 @@ function LandfillView() {
           </div>
 
           <section className="h-screen w-screen bg-[#EBE6E6] pt-[10vh] flex flex-col justify-center items-center ">
-            <div className="max-w-[850px] m-auto">
+            <div className="max-w-[650px] m-auto">
               <h1 className="text-[2rem] font-semibold leading-widest  text-center">
                 Conclusion: Optimizing for Impact
               </h1>
@@ -341,10 +341,10 @@ function LandfillView() {
                             asset_id: "Global Most Impactful Landfills",
                             emissions_quantity_avoided: 3.7,
                           },
-                          {
-                            asset_id: "Annex 1 Most Impactful Landfills",
-                            emissions_quantity_avoided: 2.2,
-                          },
+                          // {
+                          //   asset_id: "Annex 1 Most Impactful Landfills",
+                          //   emissions_quantity_avoided: 2.2,
+                          // },
                           {
                             asset_id: "Annex 1 Largest Landfills",
                             emissions_quantity_avoided: 1.3,
