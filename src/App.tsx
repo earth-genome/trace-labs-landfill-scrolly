@@ -80,7 +80,7 @@ const filteredData = SORTED_DATA.slice(0, TotalNumberOfBars);
 const radiusScale = d3
   .scaleSqrt()
   .domain(d3.extent(SORTED_DATA, (d) => +d[X_VARIABLE]))
-  .range([0, 30]);
+  .range([3, 30]);
 
 // Color related
 const defaultColor = "hsla(0, 0%, 65%, 0.2)";
@@ -108,7 +108,7 @@ function LandfillView() {
   };
 
   const onStepProgress = ({ progress }) => {
-    console.log("Step progress:", progress);
+    // console.log("Step progress:", progress);
   };
 
   return (
@@ -265,7 +265,7 @@ function LandfillView() {
               <Scrollama
                 offset={0.5}
                 onStepEnter={onStepEnter}
-                debug
+                
                 onStepExit={onStepExit}
                 onStepProgress={onStepProgress}
               >

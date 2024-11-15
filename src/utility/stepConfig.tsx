@@ -13,6 +13,17 @@ export const STEP_METADATA = {
         <em>emissions reduction potential</em> of that landfill.
       </>
     ),
+    sideText: (
+      <>
+        <strong className="text-[1.2rem] font-thin text-gray-500 tracking-widest">
+          Scenario One
+        </strong>
+        <p className="text-gray-500 text-sm">
+          {" "}
+          9,624 landfills tracked by Climate TRACE in the world
+        </p>
+      </>
+    ),
     condition: (d: any) => false,
   },
 
@@ -24,13 +35,33 @@ export const STEP_METADATA = {
         (outlined).
       </>
     ),
-    sideText: "9,624 landfills tracked by Climate TRACE in the world",
+    sideText: (
+      <>
+        <strong className="text-[1.2rem] font-thin text-gray-500 tracking-widest">
+          Scenario One
+        </strong>
+        <p className="text-gray-500 text-sm">
+          {" "}
+          9,624 landfills tracked by Climate TRACE in the world
+        </p>
+      </>
+    ),
     condition: (d: any) => false,
   },
   2: {
     label: "step 2 annex choropleth",
     text: "",
-    sideText: "9,624 landfills tracked by Climate TRACE in the world",
+    sideText: (
+      <>
+        <strong className="text-[1.2rem] font-thin text-gray-500 tracking-widest">
+          Scenario One
+        </strong>
+        <p className="text-gray-500 text-sm">
+          {" "}
+          9,624 landfills tracked by Climate TRACE in the world
+        </p>
+      </>
+    ),
     condition: (d: any) => false,
   },
   3: {
@@ -45,20 +76,51 @@ export const STEP_METADATA = {
         landfills outside of Annex I countries that we have ignored.
       </>
     ),
-    sideText: "9,624 landfills tracked by Climate TRACE in the world",
+
+    sideText: (
+      <>
+        <strong className="text-[1.2rem] font-thin text-gray-500 tracking-widest">
+          Scenario One
+        </strong>
+        <p className="text-gray-500 text-sm">
+          {" "}
+          9,624 landfills tracked by Climate TRACE in the world
+        </p>
+      </>
+    ),
     condition: (d: any) => d?.top100InAnnex === true,
     dotOpacity: 255,
   },
   4: {
     label: "step 3  circles in",
     text: "",
-    sideText: "9,624 landfills tracked by Climate TRACE in the world",
+    sideText: (
+      <>
+        <strong className="text-[1.2rem] font-thin text-gray-500 tracking-widest">
+          Scenario One
+        </strong>
+        <p className="text-gray-500 text-sm">
+          {" "}
+          9,624 landfills tracked by Climate TRACE in the world
+        </p>
+      </>
+    ),
     condition: (d: any) => d?.top100InAnnex === true,
   },
   5: {
     label: "step 4 just text 1",
     text: "The size of each circle on the map is proportional to the emissions that would be reduced if that landfill were capped.  Despite being very large, many waste sites already have good practices in place such that capping would do little to reduce emissions further.",
-    sideText: "9,624 landfills tracked by Climate TRACE in the world",
+    sideText: (
+      <>
+        <strong className="text-[1.2rem] font-thin text-gray-500 tracking-widest">
+          Scenario One
+        </strong>
+        <p className="text-gray-500 text-sm">
+          {" "}
+          9,624 landfills tracked by Climate TRACE in the world
+        </p>
+      </>
+    ),
     condition: (d: any) => d?.top100InAnnex === true,
   },
   6: {
@@ -78,8 +140,19 @@ export const STEP_METADATA = {
   7: {
     label: "step 5 most emitting landfills bar chart",
     text: "",
-    sideText:
-      "Total emission quantity avoided in the 100 largest landfills across Annex I countries:",
+    sideText: (
+      <>
+        <strong className="text-[1.2rem] font-thin text-gray-500 tracking-widest">
+          Scenario One
+        </strong>
+        <p className="text-gray-500 text-sm">
+          {" "}
+          Total emission quantity avoided in the 100 largest landfills across
+          Annex I countries
+        </p>
+      </>
+    ),
+
     condition: (d: any) => d?.top100InAnnex === true,
     bigNumber: "1.3 Mt",
   },
@@ -98,8 +171,18 @@ export const STEP_METADATA = {
       </>
     ),
     condition: (d: any) => d?.top100InAnnex === true,
-    sideText:
-      "Total emission quantity avoided in the 100 largest landfills across Annex I countries:",
+    sideText: (
+      <>
+        <strong className="text-[1.2rem] font-thin text-gray-500 tracking-widest">
+          Scenario One
+        </strong>
+        <p className="text-gray-500 text-sm">
+          {" "}
+          Total emission quantity avoided in the 100 largest landfills across
+          Annex I countries
+        </p>
+      </>
+    ),
     bigNumber: "1.3 Mt",
   },
   9: {
@@ -116,8 +199,18 @@ export const STEP_METADATA = {
       </>
     ),
     condition: (d: any) => d?.top100InAnnex === true,
-    sideText:
-      "Total emission quantity avoided in the 100 largest landfills across Annex I countries:",
+    sideText: (
+      <>
+        <strong className="text-[1.2rem] font-thin text-gray-500 tracking-widest">
+          Scenario Two
+        </strong>
+        <p className="text-gray-500 text-sm">
+          {" "}
+          Total emission quantity avoided in the 100 largest landfills across
+          the world
+        </p>
+      </>
+    ),
     bigNumber: "2.2 Mt",
   },
   10: {
@@ -134,16 +227,36 @@ export const STEP_METADATA = {
       </>
     ),
     condition: (d: any) => d?.top100OrNot === true,
-    sideText:
-      "Total emission quantity avoided in the 100 largest landfills across Annex I countries:",
+    sideText: (
+      <>
+        <strong className="text-[1.2rem] font-thin text-gray-500 tracking-widest">
+          Scenario Two
+        </strong>
+        <p className="text-gray-500 text-sm">
+          {" "}
+          Total emission quantity avoided in the 100 largest landfills across
+          the world
+        </p>
+      </>
+    ),
     bigNumber: "3.7 Mt",
   },
   11: {
     label: "step 5 most emitting landfills bar chart",
     text: "",
     condition: (d: any) => d?.top100OrNot === true,
-    sideText:
-      "Total emission quantity avoided in the 100 largest landfills across Annex I countries:",
+    sideText: (
+      <>
+        <strong className="text-[1.2rem] font-thin text-gray-500 tracking-widest">
+          Scenario Two
+        </strong>
+        <p className="text-gray-500 text-sm">
+          {" "}
+          Total emission quantity avoided in the 100 largest landfills across
+          the world
+        </p>
+      </>
+    ),
     bigNumber: "3.7 Mt",
   },
 } as const;

@@ -238,10 +238,10 @@ const DeckglMap = memo(
           ? new GeoJsonLayer({
               id: "la-layer",
               data: LA_GEOJSON,
-              getFillColor: [0, 0, 0, 0],
+              getFillColor: highlightColor,
               getLineColor: [...defaultColor.slice(0, 3), 255],
               getLineWidth: (d) => {
-                return 10;
+                return 3;
               },
               lineWidthUnits: "pixels",
               lineWidthScale: 1,
