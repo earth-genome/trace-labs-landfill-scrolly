@@ -19,7 +19,7 @@ import { getResponsiveZoom } from "@/lib/utils";
 
 const DEFAULT_OPACITY = 105;
 
-const mapDefaultFill = [231, 242, 206, 200];
+const mapDefaultFill = [50, 51, 42, 5];
 function easeOutExpo(x: number): number {
   return x === 1 ? 1 : 1 - Math.pow(2, -10 * x);
 }
@@ -139,7 +139,7 @@ const DeckglMap = memo(
           } else if (
             currentStepCondition?.label === "step 2 annex choropleth"
           ) {
-            return annexCountries.includes(d.properties.iso_a3_eh) ? 1 : 0;
+            return annexCountries.includes(d.properties.iso_a3_eh) ? 3 : 0;
           } else if (currentStepCondition?.label === "step 4 LA example") {
             return 0;
           } else {
@@ -165,7 +165,7 @@ const DeckglMap = memo(
         pickable: true,
         autoHighlight: false,
         stroked: true,
-        getLineColor: [0, 0, 0, 255],
+        getLineColor: [50, 51, 42, 255],
         lineCapRounded: true,
         lineJointRounded: true,
         lineWidthUnits: "pixels",
@@ -177,7 +177,7 @@ const DeckglMap = memo(
       const scatterplotLayer = new ScatterplotLayer({
         id: "landfill-dots",
         data: processedData,
-        stroked: true,
+        stroked: false,
         getPosition: (d) => [+d.lon, +d.lat],
         radiusUnits: "pixels",
         radiusMinPixels: 0.2,
@@ -188,10 +188,21 @@ const DeckglMap = memo(
         },
         getFillColor: (d) => d.fillColor,
         getLineWidth: (d) => {
-          const isHovered = hoverInfo?.object?.asset_id === d.asset_id;
-          return isHovered ? 3 : 0;
+          if (condition(d)) {
+            return 3;
+          } else {
+            return 0;
+          }
+          // const isHovered = hoverInfo?.object?.asset_id === d.asset_id;
+          // return isHovered ? 3 : 0;
         },
-        getLineColor: strokeColor,
+        getLineColor: (d) => {
+          if (currentStepCondition?.label === "step 2 annex choropleth") {
+            return [...defaultColor.slice(0, 3), 0];
+          } else {
+            return strokeColor;
+          }
+        },
         lineWidthUnits: "pixels",
         lineWidthScale: 1,
         lineWidthMinPixels: 0,
@@ -216,7 +227,8 @@ const DeckglMap = memo(
         },
         updateTriggers: {
           getRadius: [hoverInfo?.object?.asset_id, currentStepIndex], // Add currentStepIndex to trigger transitions
-          getLineWidth: hoverInfo?.object?.asset_id,
+          getLineWidth: [hoverInfo?.object?.asset_id, currentStepIndex],
+          stroked: [currentStepIndex],
         },
         pickable: true,
       });
@@ -226,15 +238,15 @@ const DeckglMap = memo(
           ? new GeoJsonLayer({
               id: "la-layer",
               data: LA_GEOJSON,
-              getFillColor: [234, 234, 234, 0],
-              getLineColor: [0, 0, 0, 255],
+              getFillColor: [0, 0, 0, 0],
+              getLineColor: [...defaultColor.slice(0, 3), 255],
               getLineWidth: (d) => {
-                return 4;
+                return 10;
               },
               lineWidthUnits: "pixels",
               lineWidthScale: 1,
               lineWidthMinPixels: 0,
-              lineWidthMaxPixels: 100,
+              lineWidthMaxPixels: 1000,
               lineCapRounded: true,
               lineJointRounded: true,
             })
@@ -253,9 +265,9 @@ const DeckglMap = memo(
     useEffect(() => {
       if (currentStepCondition?.label === "step 4 LA example") {
         setViewState({
-          longitude: -118.2426,
-          latitude: 34.0549,
-          zoom: 9.5,
+          longitude: -118.1,
+          latitude: 34.03,
+          zoom: 12,
           transitionInterpolator: new FlyToInterpolator({
             speed: 0.6,
             curve: 1.2,
@@ -302,7 +314,7 @@ const DeckglMap = memo(
             scrollZoom: false,
             touchRotate: true,
             minZoom: 0.000001,
-            maxZoom: 10,
+            maxZoom: 17,
           }}
           layers={layers}
         >

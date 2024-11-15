@@ -1,7 +1,6 @@
 import React from "react";
 
 const LegendValues = [
-  { value: "191K", displaySize: 40, circle: 10 },
   { value: "150K", displaySize: 32, circle: 8 },
   { value: "100K", displaySize: 24, circle: 6 },
   { value: "50K", displaySize: 16, circle: 4 },
@@ -39,7 +38,9 @@ const EmissionLegend = ({
             <p className="text-gray-600">The rest</p>
           </div>
         </div>
-        <p className="text-gray-700 font-bold" style={{ fontSize: "10px" }}>Emission quantity avoided (T)</p>
+        <p className="text-gray-700 font-bold" style={{ fontSize: "10px" }}>
+          Emissions reduction potential (t)
+        </p>
         {/* Size legend */}
         <div
           className="grid grid-cols-[40px_1fr] gap-y-4 gap-x-2 flex-col-reverse"

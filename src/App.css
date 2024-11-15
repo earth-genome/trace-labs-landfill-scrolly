@@ -408,7 +408,7 @@ h1#interactive-heading {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  background-color: var(--color-header);
+  background-color: hsla(194, 7%, 36%, 0.6);
   border-radius: var(--border-radius);
   min-width: 250px;
   padding-left: 0;
@@ -495,7 +495,7 @@ h1#interactive-heading {
   --how-to-use-offset: 25px;
   font-size: 100%;
   color: inherit;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+
   pointer-events: none;
   box-sizing: border-box;
   vertical-align: middle;
@@ -504,15 +504,7 @@ h1#interactive-heading {
 }
 .header__logo {
   line-height: 150%;
-  text-align: left;
-  font-feature-settings: "ss05" on, "ss07" on, "ss09" on, "ss04" on, "ss08" on,
-    "ss03" on;
-  font-family: "APK-Protocol", sans-serif;
-  font-weight: 400;
-  -webkit-font-smoothing: antialiased;
-  --margin: 10px;
-  --how-to-use-offset: 25px;
-  box-sizing: border-box;
+
   margin: 0;
   padding: 0;
   border: 0;

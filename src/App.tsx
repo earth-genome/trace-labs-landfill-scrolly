@@ -24,6 +24,7 @@ import { hslaToRGBA } from "@/lib/utils";
 import Legend from "@/components/custom-ui-components/Legend";
 import VisibleTextBlock from "@/components/custom-ui-components/VisibleTextBlock";
 import ClimateTraceHeader from "@/components/custom-ui-components/ClimateTraceHeader";
+import ScrollIndicator from "@/components/custom-ui-components/ScrollIndicator";
 // NOTE: Reusable UI components
 // import { Slider } from "@/components/reusable-ui-components/slider";
 
@@ -77,15 +78,14 @@ SORTED_DATA.forEach((d, i) => {
 const TotalNumberOfBars = 200;
 const filteredData = SORTED_DATA.slice(0, TotalNumberOfBars);
 const radiusScale = d3
-  .scalePow()
-  .exponent(0.6)
+  .scaleSqrt()
   .domain(d3.extent(SORTED_DATA, (d) => +d[X_VARIABLE]))
-  .range([0.1, 30]);
+  .range([0, 30]);
 
 // Color related
-const defaultColor = "hsla(182, 30%, 49%, 0.6)";
-const highlightColor = "hsla(0, 0%, 31%, 0.8)";
-const strokeColor = "hsla(355, 100%, 100%, 1.0)";
+const defaultColor = "hsla(0, 0%, 65%, 0.2)";
+const highlightColor = "hsla(68, 73%, 48%, 0.5)";
+const strokeColor = "hsla(68, 73%, 48%, 1.0)";
 
 // Move your current App component content into a new LandfillView component
 function LandfillView() {
@@ -108,8 +108,9 @@ function LandfillView() {
       >
         <ClimateTraceHeader />
       </div>
-      <div className=" relative bg-[#F7F9ED]">
-        <HeaderArticle />
+      <div className=" relative bg-[#EBE6E6]">
+        <HeaderArticle shadowColor={defaultColor} />
+
         <main className="flex flex-col ">
           <div className=" relative ">
             {/* sticky content starts */}
@@ -230,8 +231,14 @@ function LandfillView() {
                           }
                           xVariable={Y_VARIABLE}
                           yVariable={X_VARIABLE}
-                          defaultColor={defaultColor}
-                          highlightColor={highlightColor}
+                          defaultColor={defaultColor.replace(
+                            /(\d?\.?\d+)\)$/,
+                            ".3)"
+                          )}
+                          highlightColor={highlightColor.replace(
+                            /(\d?\.?\d+)\)$/,
+                            "1)"
+                          )}
                           margin={margin}
                         />
                       )}
@@ -285,7 +292,7 @@ function LandfillView() {
             </div>
           </div>
 
-          <section className="h-screen w-screen bg-[#F7F9ED] pt-[10vh] flex flex-col justify-center items-center ">
+          <section className="h-screen w-screen bg-[#EBE6E6] pt-[10vh] flex flex-col justify-center items-center ">
             <div className="max-w-[850px] m-auto">
               <h1 className="text-[2rem] font-semibold leading-widest  text-center">
                 Conclusion: Optimizing for Impact
@@ -313,22 +320,25 @@ function LandfillView() {
                         height={height}
                         data={[
                           {
-                            asset_id: "Global",
+                            asset_id: "Global Most Impactful Landfills",
                             emissions_quantity_avoided: 3.7,
                           },
                           {
-                            asset_id: "Annex 1 Most impactful landfills",
+                            asset_id: "Annex 1 Most Impactful Landfills",
                             emissions_quantity_avoided: 2.2,
                           },
                           {
-                            asset_id: "Annex 1 Largest landfills",
+                            asset_id: "Annex 1 Largest Landfills",
                             emissions_quantity_avoided: 1.3,
                           },
                         ]}
                         xVariable="emissions_quantity_avoided"
                         yVariable="asset_id"
                         horizontal={true}
-                        fill={"#1C354A"}
+                        fill={defaultColor.replace(
+                          /(\d?\.?\d+)\)$/,
+                          "1)"
+                        )}
                         yAxisAnnotations={true}
                         margin={{ top: 20, right: 20, bottom: 30, left: 250 }}
                         defaultColor="hsla(0, 0%, 78%, 1.0)"

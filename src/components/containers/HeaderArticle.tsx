@@ -1,10 +1,34 @@
-export default function HeaderArticle() {
+import ScrollIndicator from "../custom-ui-components/ScrollIndicator";
+
+export default function HeaderArticle({
+  shadowColor,
+}: {
+  shadowColor: string;
+}) {
   return (
     <article className="  ">
-      <h1 className="font-black max-w-[650px] text-[3rem] m-auto leading-[1.1]">
-        Accelerating global decarbonization through emissionality: an example
-        from reducing landfill methane emissions
+      {/* vertical-align: baseline;
+    background: transparent;
+    max-width: 540px;
+   
+    font-weight: 400;
+    font-size: 80px;
+    line-height: 1.07;
+    letter-spacing: .01em;
+    margin: 16px 0 32px; */}
+
+      <h1
+        className="font-black max-w-[650px] text-[3rem] text-center m-auto tracking-wide  leading-[1.1]"
+        style={{
+          textShadow: `-1px -1px 0 ${shadowColor}, 1px -1px 0 ${shadowColor}, -1px 1px 0 ${shadowColor}, 1px 1px 0 ${shadowColor}`,
+        }}
+      >
+        Accelerating global decarbonization through emissionality
       </h1>
+
+      <h2 className="mt-4 mb-10 max-w-[650px] m-auto font-roboto text-center p-0 border-0 outline-none align-baseline uppercase font-normal text-[1rem] leading-[27px] tracking-[.03em]">
+        an example from reducing landfill methane emissions
+      </h2>
       <p className="max-w-[650px] m-auto ">
         Decarbonization strategies often base emissions-reduction interventions
         on two assumptions — working locally and focusing on the largest
@@ -19,15 +43,16 @@ export default function HeaderArticle() {
         emissions reductions. Deployed at scale and across sectors, the
         additional decarbonization benefit is measured in gigatons annually.
       </p>
-      <h3 className="text-[2rem] font-semibold tracking-tight  text-center pt-10">
-        Example: Landfill methane emissions
-      </h3>
-      <p className="max-w-[650px] m-auto">
+
+      <section className="max-w-[650px] m-auto">
+        <h3 className="text-[1.5rem] font-semibold tracking-tight  text-left pt-10 ml-[-2px]">
+          Example: Landfill methane emissions
+        </h3>
         For this example, we focus on landfill methane emissions in particular.
         In practice more broadly, such an emissionality approach can be taken
         for decarbonization in any given sector, such as power (electricity
         generation) or steel — or even across sectors.
-      </p>
+      </section>
       <p className="max-w-[650px] m-auto">
         Methane is a potent but shorter-lived greenhouse gas (GHG), with a
         global warming potential (GWP) some 85 times stronger than carbon
@@ -48,10 +73,11 @@ export default function HeaderArticle() {
         climate crisis. Capping also provides a pathway for capturing landfill
         gas (LFG), enabling LFG-to-energy uses, also.
       </p>
-      <h3 className="text-[2rem] font-semibold tracking-tight  text-center pt-10">
-        What if we could cap 100 Landfills?
-      </h3>
-      <p className="max-w-[650px] m-auto">
+
+      <section className="max-w-[650px] m-auto">
+        <h3 className="text-[1.5rem] font-semibold tracking-tight  text-left pt-10 ml-[-2px]">
+          What if we could cap 100 Landfills?
+        </h3>
         Let’s imagine the funds and political will have come together amongst
         the UN’s Annex I (historically industrialized) nations to cap 100
         landfills. Climate TRACE uses AI and public data to track and
@@ -59,7 +85,7 @@ export default function HeaderArticle() {
         recognized the potential to cut planet-heating emissions and are
         evaluating options for how to best prioritize this group of just over 1%
         of all landfills tracked by Climate TRACE.
-      </p>
+      </section>
       <p className="max-w-[650px] m-auto">
         Scenario 1: Two assumptions In our first scenario, these nations make
         two reasonable-seeming assumptions: Work locally: Collective global
@@ -72,10 +98,12 @@ export default function HeaderArticle() {
         best candidates to be capped. Now we evaluate the net climate impact of
         these assumptions.
       </p>
-      <p className="max-w-[650px] m-auto"></p>
-      <p className="max-w-[650px] m-auto"></p>
-      <p className="max-w-[650px] m-auto"></p>
-      <p className="max-w-[650px] m-auto"></p>
+     
+
+      <section className="relative h-[80px]">
+        <ScrollIndicator color={shadowColor} />
+      </section>
+  
     </article>
   );
 }

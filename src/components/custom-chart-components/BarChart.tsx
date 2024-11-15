@@ -235,6 +235,7 @@ const BarChart: React.FC<BarChartProps> = ({
         .style("fill", "white");
 
       // Style the y-axis text
+      // Style the y-axis text
       svg
         .select(".y-axis")
         .selectAll("text")
@@ -258,7 +259,14 @@ const BarChart: React.FC<BarChartProps> = ({
               .attr("dy", "1.2em");
           } else {
             // This is the Global entry
-            text.text(words[0]);
+            const globalWords = words[0].split("Global");
+            text.append("tspan").text("Global").attr("x", -30).attr("dy", 0);
+
+            text
+              .append("tspan")
+              .text(globalWords[1])
+              .attr("x", -30)
+              .attr("dy", "1.2em");
           }
         });
     }

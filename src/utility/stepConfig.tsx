@@ -80,7 +80,7 @@ export const STEP_METADATA = {
     text: "",
     sideText: "Total emission quantity avoided in the 100 largest landfills across Annex I countries:",
     condition: (d: any) => d?.top100InAnnex === true,
-    bigNumber: "1.3 MT",
+    bigNumber: "1.3 Mt",
   },
   8: {
     label: "step 5 most emitting landfills bar chart text",
@@ -98,7 +98,7 @@ export const STEP_METADATA = {
     ),
     condition: (d: any) => d?.top100InAnnex === true,
     sideText: "Total emission quantity avoided in the 100 largest landfills across Annex I countries:",
-    bigNumber: "1.3 MT",
+    bigNumber: "1.3 Mt",
   },
   9: {
     label: "step 6 pre scenario 2 text",
@@ -115,7 +115,7 @@ export const STEP_METADATA = {
     ),
     condition: (d: any) => d?.top100InAnnex === true,
     sideText: "Total emission quantity avoided in the 100 largest landfills across Annex I countries:",
-    bigNumber: "2.2 MT",
+    bigNumber: "2.2 Mt",
   },
   10: {
     label: "step 5 most emitting landfills bar chart",
@@ -133,7 +133,7 @@ export const STEP_METADATA = {
     condition: (d: any) => d?.top100OrNot === true,
     sideText:
       "Total emission quantity avoided in the 100 largest landfills across Annex I countries:",
-    bigNumber: "3.7 MT",
+    bigNumber: "3.7 Mt",
   },
   11: {
     label: "step 5 most emitting landfills bar chart",
@@ -141,7 +141,7 @@ export const STEP_METADATA = {
     condition: (d: any) => d?.top100OrNot === true,
     sideText:
       "Total emission quantity avoided in the 100 largest landfills across Annex I countries:",
-    bigNumber: "3.7 MT",
+    bigNumber: "3.7 Mt",
   },
 } as const;
 
