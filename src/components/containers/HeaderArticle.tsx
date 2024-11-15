@@ -36,7 +36,10 @@ export default function HeaderArticle({
         superior approach is called emissionality, a decarbonization strategy
         that focuses on investing in interventions that can yield the greatest
         emissions reduction, regardless of their physical location around the
-        world.
+        world. <br></br> <br></br> In this example, we show how emissionality
+        can nearly triple real-world emissions reductions. Deployed at scale and
+        across sectors, the additional decarbonization benefit is measured in
+        gigatons annually.
       </p>
       <p className="max-w-[650px] m-auto">
         In this example, we show how emissionality can nearly double real-world
@@ -54,24 +57,30 @@ export default function HeaderArticle({
         generation) or steel — or even across sectors.
       </section>
       <p className="max-w-[650px] m-auto">
+        <br></br>
         Methane is a potent but shorter-lived greenhouse gas (GHG), with a
         global warming potential (GWP) some 85 times stronger than carbon
         dioxide on a 20-year time scale, and still 25 times stronger than CO2 on
         a 100-year time horizon. Thus, near-term methane emissions reductions
         can have an outsized beneficial influence on overall climate action.
+        <br></br>
       </p>
       <p className="max-w-[650px] m-auto">
+        <br></br>
         The waste sector is one of the largest human-made sources of methane.
         Landfill emissions can be reduced in several ways, such as by upgrading
         a landfill from an unmanaged disposal site to a covered sanitary
         landfill.
+        <br></br>
       </p>
       <p className="max-w-[650px] m-auto">
+        <br></br>
         Capping landfills with various materials traps much of the methane they
         create, improving local air quality and preventing the methane from
         being directly released to the atmosphere where it contributes to the
         climate crisis. Capping also provides a pathway for capturing landfill
         gas (LFG), enabling LFG-to-energy uses, also.
+        <br></br>
       </p>
 
       <section className="max-w-[650px] m-auto">
@@ -87,23 +96,33 @@ export default function HeaderArticle({
         of all landfills tracked by Climate TRACE.
       </section>
       <p className="max-w-[650px] m-auto">
-        Scenario 1: Two assumptions In our first scenario, these nations make
-        two reasonable-seeming assumptions: Work locally: Collective global
-        climate action often focuses on countries taking steps to reduce their
-        own individual emissions, such as through Nationally Determined
-        Contributions (NDCs). Corporations often apply a similar, localized
-        approach to decarbonizing their operational footprint and supply chain.
-        Focusing on most-emitting landfills: Landfills with the greatest
-        emissions among Annex I countries would, at first glance, seem to be the
-        best candidates to be capped. Now we evaluate the net climate impact of
-        these assumptions.
+        <h3 className="text-[1.5rem] font-semibold tracking-tight  text-left pt-10 ml-[-2px]">
+          Scenario 1: Two assumptions
+        </h3>
+        In our first scenario, these nations make two reasonable-seeming
+        assumptions:
+        <ol>
+          <li>
+            <strong>1. Work locally:</strong> Collective global climate action
+            often focuses on countries taking steps to reduce their own
+            individual emissions, such as through Nationally Determined
+            Contributions (NDCs). Corporations often apply a similar, localized
+            approach to decarbonizing their operational footprint and supply
+            chain. 
+          </li>
+          <li>
+            <strong>2. Focusing on most-emitting landfills:</strong> Landfills
+            with the greatest emissions among Annex I countries would, at first
+            glance, seem to be the best candidates to be capped.
+          </li>
+        </ol>
+        <br></br>
+        Now we evaluate the net climate impact of these assumptions.
       </p>
-     
 
       <section className="relative h-[80px]">
         <ScrollIndicator color={shadowColor} />
       </section>
-  
     </article>
   );
 }

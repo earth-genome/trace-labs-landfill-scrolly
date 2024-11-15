@@ -97,7 +97,18 @@ function LandfillView() {
   // This callback fires when a Step hits the offset threshold. It receives the
   // data prop of the step, which in this demo stores the index of the step.
   const onStepEnter = ({ data }) => {
-    setCurrentStepIndex(data);
+    console.log("Step entered:", data);
+    if (data > 0) {
+      setCurrentStepIndex(data);
+    }
+  };
+
+  const onStepExit = ({ data }) => {
+    console.log("Step exited:", data);
+  };
+
+  const onStepProgress = ({ progress }) => {
+    console.log("Step progress:", progress);
   };
 
   return (
@@ -251,7 +262,13 @@ function LandfillView() {
             {/* sticky content ends */}
             {/* NOTE: Steps Container: flowing text */}
             <div className="relative z-[99999999] mt-[-100vh] w-full">
-              <Scrollama offset={0.5} onStepEnter={onStepEnter}>
+              <Scrollama
+                offset={0.5}
+                onStepEnter={onStepEnter}
+                debug
+                onStepExit={onStepExit}
+                onStepProgress={onStepProgress}
+              >
                 {Object.values(STEP_METADATA).map((stepblock, stepIndex) => (
                   <Step data={stepIndex} key={stepIndex}>
                     <div
@@ -335,10 +352,7 @@ function LandfillView() {
                         xVariable="emissions_quantity_avoided"
                         yVariable="asset_id"
                         horizontal={true}
-                        fill={defaultColor.replace(
-                          /(\d?\.?\d+)\)$/,
-                          "1)"
-                        )}
+                        fill={defaultColor.replace(/(\d?\.?\d+)\)$/, "1)")}
                         yAxisAnnotations={true}
                         margin={{ top: 20, right: 20, bottom: 30, left: 250 }}
                         defaultColor="hsla(0, 0%, 78%, 1.0)"
