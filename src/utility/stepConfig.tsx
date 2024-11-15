@@ -234,8 +234,9 @@ export const STEP_METADATA = {
         </strong>
         <p className="text-gray-500 text-sm">
           {" "}
-          Total emission quantity avoided in the 100 largest landfills across
-          the world
+          Total emissions avoided by capping the{" "}
+          <strong>100 landfills globally</strong> that will reduce emissions the
+          most, once covered.
         </p>
       </>
     ),
@@ -252,8 +253,9 @@ export const STEP_METADATA = {
         </strong>
         <p className="text-gray-500 text-sm">
           {" "}
-          Total emission quantity avoided in the 100 largest landfills across
-          the world
+          Total emissions avoided by capping the{" "}
+          <strong>100 landfills globally</strong> that will reduce emissions the
+          most, once covered.
         </p>
       </>
     ),

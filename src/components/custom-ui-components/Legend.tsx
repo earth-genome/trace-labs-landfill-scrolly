@@ -9,9 +9,11 @@ const LegendValues = [
 const EmissionLegend = ({
   highlightColor,
   defaultColor,
+  currentStepIndex,
 }: {
   highlightColor: string;
   defaultColor: string;
+  currentStepIndex: number;
 }) => {
   return (
     <div className="bg-[#f8f8e9] bg-opacity-10  backdrop-blur-sm rounded-md w-[250px] space-y-4 z-50">
@@ -27,7 +29,9 @@ const EmissionLegend = ({
               style={{ backgroundColor: highlightColor }}
             ></span>
             <p className="text-gray-600 leading-tight">
-              The 100 largest landfills across Annex I countries
+              {currentStepIndex >= 10
+                ? "The 100 landfills we are capping in this scenario"
+                : "The 100 landfills we are capping in this scenario"}
             </p>
           </div>
           <div className="flex items-center space-x-2">

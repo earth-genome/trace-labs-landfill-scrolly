@@ -180,6 +180,7 @@ function LandfillView() {
                       <Legend
                         highlightColor={highlightColor}
                         defaultColor={defaultColor}
+                        currentStepIndex={currentStepIndex}
                       />
                     </div>
                   </section>
