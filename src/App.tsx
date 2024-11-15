@@ -266,7 +266,6 @@ function LandfillView() {
               <Scrollama
                 offset={0.5}
                 onStepEnter={onStepEnter}
-                
                 onStepExit={onStepExit}
                 onStepProgress={onStepProgress}
               >
@@ -298,7 +297,7 @@ function LandfillView() {
                         <p
                           id="interactive-leadin"
                           data-testid="interactive-leadin"
-                          className="lg:text-xl text-center leading-tight"
+                          className="lg:text-xl text-left leading-tight"
                         >
                           {STEP_METADATA[stepIndex]?.text}
                         </p>
@@ -310,20 +309,16 @@ function LandfillView() {
             </div>
           </div>
 
-          <section className="h-screen w-screen bg-[#EBE6E6] pt-[10vh] flex flex-col justify-center items-center ">
+          <section className="h-[110vh] w-screen bg-[#EBE6E6] pt-[10vh] flex flex-col justify-center items-center ">
             <div className="max-w-[650px] m-auto">
               <h1 className="text-[2rem] font-semibold leading-widest  text-center">
                 Conclusion: Optimizing for Impact
               </h1>
-              <p className="mt-8 text-center">
-                These scenarios demonstrate that effective climate action is
-                best served by letting go of geographic constraints and
-                prioritizing impact above all. When we look beyond national
-                boundaries and directly optimize for the highest emissions
-                reduction potential, we can significantly amplify our impact.
-                The data is clear: focusing globally and making decisions based
-                purely on potential emissions reduction, rather than political
-                considerations, yields the greatest climate benefit.
+              <p className="mt-8 text-left">
+                These scenarios in the Waste sector demonstrate that effective
+                climate action is best served with emissionality – focusing
+                globally based on impact, rather than prioritizing local action
+                and large emissions sources.
               </p>
               <div className="flex-grow  flex justify-center items-center">
                 {/* {top100Conditions.map((d, i) => ( */}
@@ -363,6 +358,19 @@ function LandfillView() {
                 </figure>
                 {/* ))} */}
               </div>
+              <p className="mt-8 text-left">
+                In the scenarios above, wealthy country donors employing
+                emissionality (a global, impact-focused approach) would reduce
+                2.8x more emissions for the same investment of resources. This
+                is similar to results Climate TRACE finds in other sectors and
+                scenarios. For example, corporations will often see a multiple
+                on their impact per investment employing emissionality rather
+                than a localized approach to decarbonizing their operational
+                footprint and supply chain.
+                <br></br> <br></br> Policymakers and decision makers whose goal
+                is to drive maximum emissions reductions may wish to pursue
+                policies of this kind.
+              </p>
             </div>
           </section>
         </main>

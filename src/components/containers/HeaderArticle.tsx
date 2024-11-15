@@ -36,35 +36,26 @@ export default function HeaderArticle({
         superior approach is called emissionality, a decarbonization strategy
         that focuses on investing in interventions that can yield the greatest
         emissions reduction, regardless of their physical location around the
-        world. <br></br> <br></br> In this example, we show how emissionality
-        can nearly triple real-world emissions reductions. Deployed at scale and
-        across sectors, the additional decarbonization benefit is measured in
-        gigatons annually.
+        world.
       </p>
       <p className="max-w-[650px] m-auto">
-        In this example, we show how emissionality can nearly double real-world
-        emissions reductions. Deployed at scale and across sectors, the
-        additional decarbonization benefit is measured in gigatons annually.
+        We review an example for a single sector, below, showing how
+        emissionality can nearly triple real-world emissions reductions. Such
+        projects deployed at scale and across sectors would have an additional
+        decarbonization benefit measured in gigatons, annually.
       </p>
 
       <section className="max-w-[650px] m-auto">
         <h3 className="text-[1.5rem] font-semibold tracking-tight  text-left pt-10 ml-[-2px]">
           Example: Landfill methane emissions
         </h3>
-        For this example, we focus on landfill methane emissions in particular.
-        In practice more broadly, such an emissionality approach can be taken
-        for decarbonization in any given sector, such as power (electricity
-        generation) or steel — or even across sectors.
+        For this example, we focus on landfill methane emissions. Methane is a
+        potent but shorter-lived greenhouse gas (GHG), with a global warming
+        potential (GWP) some 85 times stronger than carbon dioxide on a 20-year
+        time scale, and still 25 times stronger than CO2 on a 100-year time
+        horizon. Thus, near-term methane emissions reductions can have an
+        outsized beneficial influence on overall climate action.
       </section>
-      <p className="max-w-[650px] m-auto">
-        <br></br>
-        Methane is a potent but shorter-lived greenhouse gas (GHG), with a
-        global warming potential (GWP) some 85 times stronger than carbon
-        dioxide on a 20-year time scale, and still 25 times stronger than CO2 on
-        a 100-year time horizon. Thus, near-term methane emissions reductions
-        can have an outsized beneficial influence on overall climate action.
-        <br></br>
-      </p>
       <p className="max-w-[650px] m-auto">
         <br></br>
         The waste sector is one of the largest human-made sources of methane.
@@ -73,6 +64,7 @@ export default function HeaderArticle({
         landfill.
         <br></br>
       </p>
+
       <p className="max-w-[650px] m-auto">
         <br></br>
         Capping landfills with various materials traps much of the methane they
@@ -97,23 +89,21 @@ export default function HeaderArticle({
       </section>
       <p className="max-w-[650px] m-auto">
         <h3 className="text-[1.5rem] font-semibold tracking-tight  text-left pt-10 ml-[-2px]">
-          Scenario 1: Two assumptions
+          Scenario 1: Work locally, focusing on high emissions
         </h3>
         In our first scenario, these nations make two reasonable-seeming
         assumptions:
-        <ol>
-          <li>
+        <ol className="mt-4">
+          <li className="ml-4">
             <strong>1. Work locally:</strong> Collective global climate action
             often focuses on countries taking steps to reduce their own
             individual emissions, such as through Nationally Determined
-            Contributions (NDCs). Corporations often apply a similar, localized
-            approach to decarbonizing their operational footprint and supply
-            chain. 
+            Contributions (NDCs).
           </li>
-          <li>
-            <strong>2. Focusing on most-emitting landfills:</strong> Landfills
-            with the greatest emissions among Annex I countries would, at first
-            glance, seem to be the best candidates to be capped.
+          <li className="mt-2 ml-4">
+            <strong>2. Focusing on most-emitting landfills:</strong> The largest
+            landfills among Annex I countries would, at first glance, seem to be
+            the best candidates to be capped.
           </li>
         </ol>
         <br></br>

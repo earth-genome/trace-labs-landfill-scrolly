@@ -6,11 +6,11 @@ export const STEP_METADATA = {
     label: "step 1 overall dots",
     text: (
       <>
-        To do so, we will start with a map of the world, displaying the
-        locations of all <strong>9,624 landfills</strong> tracked by Climate
-        TRACE in the world. This visualization shows each landfill as a circle,
-        with its size corresponding to the
-        <em>emissions reduction potential</em> of that landfill.
+        To evaluate Scenario 1, we will start with a map of the world,
+        displaying the locations of all <strong>9,624 landfills</strong> tracked
+        by Climate TRACE in the world. This visualization shows each landfill as
+        a circle, with its size corresponding to the{" "}
+        <strong>emissions reduction potential</strong> of that landfill.
       </>
     ),
     sideText: (
@@ -31,8 +31,8 @@ export const STEP_METADATA = {
     label: "step 2 before animating the annex in",
     text: (
       <>
-        In our first scenario, we’ll cap landfills in Annex I countries
-        (outlined).
+        In our first scenario, we’ll cap landfills in{" "}
+        <strong>Annex I countries</strong> (outlined).
       </>
     ),
     sideText: (
@@ -68,12 +68,17 @@ export const STEP_METADATA = {
     label: "step 3 before circles in",
     text: (
       <>
-        In our first scenario, we have capped the 100 largest landfills across
-        Annex I countries (highlighted in green). The rest of the 9,624
-        landfills tracked by Climate TRACE – landfills that we have not capped –
-        are displayed in gray. Here, we might begin to question our first
-        assumption of working locally, since it’s clear that there are a lot of
-        landfills outside of Annex I countries that we have ignored.
+        In our first scenario, we have capped the{" "}
+        <strong>
+          100 largest landfills across Annex I countries (highlighted in green)
+        </strong>
+        . The rest of the 9,624 landfills tracked by Climate TRACE – landfills
+        that we have not capped – are displayed in gray. Here, we might begin to
+        question our first assumption of working locally:{" "}
+        <strong>
+          There are a lot of landfills outside of Annex I countries that we have
+          ignored.
+        </strong>
       </>
     ),
 
@@ -109,7 +114,22 @@ export const STEP_METADATA = {
   },
   5: {
     label: "step 4 just text 1",
-    text: "The size of each circle on the map is proportional to the emissions that would be reduced if that landfill were capped.  Despite being very large, many waste sites already have good practices in place such that capping would do little to reduce emissions further.",
+    text: (
+      <>
+        The <strong>size</strong> of each circle on the map is proportional to
+        the{" "}
+        <strong>
+          emissions that would be reduced if that landfill were capped
+        </strong>
+        .<br></br>
+        <br></br> Often, though,{" "}
+        <strong>
+          large landfills might not actually benefit from additional capping
+        </strong>
+        . This is because many waste sites already have good practices in place,
+        such that capping would do little to reduce emissions further.
+      </>
+    ),
     sideText: (
       <>
         <strong className="text-[1.2rem] font-thin text-gray-500 tracking-widest">
@@ -130,9 +150,15 @@ export const STEP_METADATA = {
         To choose one example, Puente Hills Landfill in Los Angeles is one of
         the largest in the U.S., but has already been covered since its 2013
         closure, and has even operated an LFG-to-energy station since 1987,
-        reducing emissions further. Thus, we can question our second assumption,
-        as well: The most-emitting landfills may not actually provide much
-        return on our investment if their emissions intensity is already low.
+        reducing emissions further. Further effort in a location such as this
+        one would reduce emissions by less than 3k tonnes, whereas capping an
+        uncapped landfill with similar size could reduce emissions by 20 times,
+        in many cases. Thus, we can question the second assumption we made in
+        Scenario 1, as well:{" "}
+        <strong>
+          The largest landfills may not actually provide much return on our
+          investment if their emissions intensity is already low.
+        </strong>
       </>
     ),
     condition: (d: any) => d?.top100InAnnex === true,
@@ -160,14 +186,18 @@ export const STEP_METADATA = {
     label: "step 5 most emitting landfills bar chart text",
     text: (
       <>
-        In the bar chart below, we sort all landfills in the world by the
-        emissions reductions that would actually result in capping them. The
-        chart shows the top 200 such landfills. In our current scenario, the 100
-        landfills that we’ve capped are sprinkled through the chart – many
-        landfills in gray have huge potential, but weren’t capped in this
-        scenario. Ultimately, Scenario 1 reduces emissions by 1.3 million metric
-        tonnes or Mt  1.3 n6 Gt1.3 million Mt, or 4.3% of all landfill
-        emissions.
+        To clarify the emissions reductions we are leaving on the table in
+        Scenario one, we introduce a bar chart below, sorting all landfills in
+        the world by the emissions reductions that would actually result in
+        capping them. The chart shows the top 200 such landfills. In our current
+        scenario, the 100 landfills that we’ve capped are sprinkled through the
+        chart –{" "}
+        <strong>
+          many landfills in gray have huge potential, but weren’t capped in
+          Scenario 1
+        </strong>
+        . Ultimately, this approach reduces emissions by 1.3Mt (million metric
+        tonnes) CH4 or 4.3% of all landfill emissions.
       </>
     ),
     condition: (d: any) => d?.top100InAnnex === true,
@@ -189,13 +219,17 @@ export const STEP_METADATA = {
     label: "step 6 pre scenario 2 text",
     text: (
       <>
-        Now, let us set the two assumptions of Scenario 1 (working locally and
-        focusing on largest landfills), and instead ask the question more
-        directly: With the budget to cover 100 landfills, which 100 landfills
-        anywhere and regardless of current emissions would actually have the
-        most impact if they were covered? To do this, we look at each landfill
-        globally, and we look at their emissions factors and activity to see the
-        actual effect of our actions (i.e. the emissions reduction potential).
+        Now, let us set aside the two assumptions of Scenario 1 (working locally
+        and focusing on largest landfills).{" "}
+        <strong>
+          In Scenario 2, we instead focus directly on emissions reduction:
+        </strong>{" "}
+        With the budget to cover 100 landfills, which 100 landfills{" "}
+        <strong>anywhere</strong> and <strong>regardless of size</strong> would
+        actually have the most impact if they were covered? To do this, we look
+        at each landfill globally, and we look at their emissions factors and
+        activity to see the actual effect of our actions (i.e. the
+        emissionality).
       </>
     ),
     condition: (d: any) => d?.top100InAnnex === true,
@@ -211,7 +245,7 @@ export const STEP_METADATA = {
         </p>
       </>
     ),
-    bigNumber: "1.3 Mt",
+    bigNumber: "3.7 Mt",
   },
   10: {
     label: "step 5 most emitting landfills bar chart",
@@ -222,8 +256,11 @@ export const STEP_METADATA = {
         capped. In the bar chart, we see that the highest-potential 100
         landfills have been precisely targeted. By looking at each landfill and
         measuring the emissions that might be reduced directly, we get a
-        whopping 3.7 million metric tonnes or Mt Gt  12% reduction in emissions,
-        or  12% of all landfill emissions.
+        <strong>
+          {" "}
+          whopping 3.7Mt (million metric tonnes) CH4 reduction in emissions, or
+          12% of all landfill emissions.
+        </strong>
       </>
     ),
     condition: (d: any) => d?.top100OrNot === true,
