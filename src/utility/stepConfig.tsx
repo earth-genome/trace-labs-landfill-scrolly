@@ -211,7 +211,7 @@ export const STEP_METADATA = {
         </p>
       </>
     ),
-    bigNumber: "2.2 Mt",
+    bigNumber: "1.3 Mt",
   },
   10: {
     label: "step 5 most emitting landfills bar chart",

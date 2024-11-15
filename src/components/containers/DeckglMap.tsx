@@ -137,7 +137,9 @@ const DeckglMap = memo(
           if (currentStepIndex === 0) {
             return 0;
           } else if (
-            currentStepCondition?.label === "step 2 annex choropleth"
+            currentStepIndex >= 2 &&
+            currentStepIndex < 10
+            // currentStepCondition?.label === "step 2 annex choropleth"
           ) {
             return annexCountries.includes(d.properties.iso_a3_eh) ? 3 : 0;
           } else if (currentStepCondition?.label === "step 4 LA example") {
